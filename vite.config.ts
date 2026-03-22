@@ -11,9 +11,6 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
-  define: {
-    'import.meta.env.VITE_API_URL': JSON.stringify(process.env.VITE_API_URL || 'https://agil-gestao-api.onrender.com'),
-  },
   optimizeDeps: {
     esbuildOptions: {
       define: {
@@ -33,13 +30,8 @@ export default defineConfig({
       },
     },
     sourcemap: false,
-    minify: 'terser',
-    terserOptions: {
-      compress: {
-        drop_console: true,
-        drop_debugger: true,
-      },
-    },
+    minify: 'esbuild',
+    target: 'es2015',
   },
   server: {
     port: 5173,

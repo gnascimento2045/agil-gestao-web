@@ -8,7 +8,7 @@ import {
 import { toast } from 'sonner';
 import { register } from '../services/api';
 
-const DOWNLOAD_URL = 'https://github.com/gnascimento2045/agil-gestao-desktop/releases/download/v1.0.0/Agil.Gestao.Setup.1.0.0.exe';
+const DOWNLOAD_URL = 'https://github.com/gnascimento2045/agil-gestao-web/releases/download/v1.0.0/Agil.Gestao.Setup.1.0.0.exe';
 const WHATSAPP_URL = 'https://wa.me/5561992724480';
 
 const DEMO_IMAGES = [
