@@ -1,8 +1,19 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
+import { viteStaticCopy } from 'vite-plugin-static-copy'
 
 export default defineConfig({
-  plugins: [react()],
+  plugins: [
+    react(),
+    viteStaticCopy({
+      targets: [
+        {
+          src: 'public/images/*',
+          dest: 'images'
+        }
+      ]
+    })
+  ],
   define: {
     global: 'globalThis',
     'import.meta.env.VITE_API_URL': JSON.stringify('https://agil-gestao-api.onrender.com'),
@@ -17,20 +28,38 @@ export default defineConfig({
   css: {
     devSourcemap: true,
     modules: false,
+    preprocessorOptions: {
+      scss: {}
+    }
   },
   build: {
     cssCodeSplit: true,
     rollupOptions: {
       output: {
         manualChunks: {
-          vendor: ['react', 'react-dom'],
+          vendor: ['react', 'react-dom', 'lucide-react'],
+          ui: ['class-variance-authority', 'clsx', 'tailwind-merge']
         },
+      },
+    },
+    sourcemap: true,
+    minify: 'terser',
+    terserOptions: {
+      compress: {
+        drop_console: true,
+        drop_debugger: true,
       },
     },
   },
   server: {
     port: 5173,
-    host: true
+    host: true,
+    hmr: {
+      overlay: true
+    }
   },
+  preview: {
+    port: 4173,
+    host: true
+  }
 })
-

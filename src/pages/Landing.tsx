@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect} from 'react';
 import { ArrowRight, Download, Users, CreditCard, Mail, Lock, Phone, User, Copy, CheckCircle } from 'lucide-react';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
@@ -20,6 +20,11 @@ export default function Landing() {
   });
   const [loading, setLoading] = useState(false);
   const [licencaChave, setLicencaChave] = useState('');
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    setIsVisible(true);
+  }, []);
 
   const planos = [
     { id: 'gratis' as const, title: 'Grátis', subtitle: 'Até R$5.000 em vendas', price: 'R$0', dias: 30, destaque: true },
@@ -65,36 +70,36 @@ export default function Landing() {
 
   if (step === 'success') {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center px-4 py-12">
-        <Card className="w-full max-w-md">
+      <div className="min-h-screen bg-gradient-to-br from-emerald-400 via-green-400 to-emerald-500 flex items-center justify-center px-4 py-12 backdrop-blur-sm">
+        <Card className="w-full max-w-md backdrop-blur-xl bg-white/80 border-white/50 shadow-2xl">
           <CardHeader className="text-center">
-            <div className="w-20 h-20 bg-green-100 rounded-2xl flex items-center justify-center mx-auto mb-6">
-              <CheckCircle className="h-10 w-10 text-green-600" />
+            <div className="w-24 h-24 bg-emerald-100/80 rounded-3xl flex items-center justify-center mx-auto mb-8 shadow-lg animate-pulse">
+              <CheckCircle className="h-12 w-12 text-emerald-600" />
             </div>
-            <CardTitle className="text-3xl">Sucesso!</CardTitle>
-            <CardDescription>Sua conta e licença foram criadas.</CardDescription>
+            <CardTitle className="text-4xl bg-gradient-to-r from-emerald-600 to-green-700 bg-clip-text text-transparent font-bold">Sucesso!</CardTitle>
+            <CardDescription className="text-lg">Sua conta e licença foram criadas.</CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
-            <div className="bg-gray-50 p-4 rounded-xl border">
-              <div className="flex items-center justify-between mb-2">
-                <span className="font-medium">Chave da Licença:</span>
-                <Button variant="ghost" size="icon" onClick={handleCopyChave}>
-                  <Copy className="h-4 w-4" />
+            <div className="bg-gradient-to-r from-gray-50 to-gray-100/50 p-6 rounded-2xl border border-emerald-100 shadow-inner">
+              <div className="flex items-center justify-between mb-4">
+                <span className="font-bold text-lg text-gray-800">Chave da Licença:</span>
+                <Button variant="ghost" size="icon" onClick={handleCopyChave} className="hover:bg-emerald-100">
+                  <Copy className="h-5 w-5" />
                 </Button>
               </div>
-              <code className="block bg-white p-3 rounded-lg font-mono text-lg font-semibold text-gray-900 break-all">
+              <code className="block bg-gradient-to-r from-white to-gray-50 p-4 rounded-xl font-mono text-xl font-bold text-gray-900 break-all border border-emerald-200 shadow-md">
                 {licencaChave}
               </code>
             </div>
-            <Button asChild size="lg" className="w-full">
+            <Button asChild size="lg" className="w-full bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 h-16 text-lg shadow-xl">
               <a href={DOWNLOAD_URL} download>
-                <Download className="h-5 w-5 mr-2" />
+                <Download className="h-6 w-6 mr-3" />
                 Baixar Agil Gestão (Grátis)
               </a>
             </Button>
-            <Button variant="outline" asChild className="w-full">
+            <Button variant="outline" asChild className="w-full h-14 border-2 border-emerald-200 hover:bg-emerald-50">
               <a href={DOWNLOAD_URL}>
-                Baixar Agora
+                🚀 Baixar Agora
               </a>
             </Button>
           </CardContent>
@@ -104,108 +109,122 @@ export default function Landing() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-blue-50">
+    <div className={`min-h-screen bg-gradient-to-br from-indigo-50 via-blue-50/50 to-purple-50/30 transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
       {step === 'hero' ? (
         <div className="min-h-screen flex flex-col">
-          <header className="px-4 lg:px-8 py-6">
-            <div className="max-w-6xl mx-auto flex justify-between items-center">
-              <div className="flex items-center gap-3">
-                <img src="/images/logo.png" alt="Agil Gestão" className="h-10 w-10" />
-                <h1 className="text-2xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">Agil Gestão</h1>
+          <header className="px-4 lg:px-8 py-6 backdrop-blur-md">
+            <div className="max-w-7xl mx-auto flex justify-between items-center">
+              <div className="flex items-center gap-4 backdrop-blur-sm bg-white/80 rounded-2xl px-6 py-3 shadow-xl">
+                <img src="/images/logo.png" alt="Agil Gestão" className="h-12 w-12 rounded-2xl shadow-lg animate-bounce-slow" loading="lazy" />
+                <h1 className="text-3xl font-black bg-gradient-to-r from-gray-900 via-indigo-900 to-purple-900 bg-clip-text text-transparent drop-shadow-lg">Agil Gestão</h1>
               </div>
-              <Button onClick={() => setStep('form')} className="gap-2">
-                Criar Conta Grátis <ArrowRight className="h-4 w-4" />
+              <Button onClick={() => setStep('form')} className="gap-3 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 shadow-xl h-14 px-8 text-lg font-bold animate-pulse-slow">
+                Criar Conta Grátis 
+                <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
               </Button>
             </div>
           </header>
 
-          <main className="flex-1 flex items-center justify-center px-4 py-12 lg:py-24">
-            <div className="max-w-6xl mx-auto grid lg:grid-cols-2 gap-12 lg:gap-24 items-center">
-              <div>
-                <h2 className="text-5xl lg:text-6xl font-bold bg-gradient-to-r from-gray-900 to-indigo-900 bg-clip-text text-transparent leading-tight mb-6">
-                  Sistema de Vendas <br />
-                  <span className="text-4xl lg:text-5xl">Completo e Rápido</span>
+          <main className="flex-1 flex items-center justify-center px-4 py-16 lg:py-24">
+            <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 lg:gap-32 items-center">
+              <div className="space-y-8 animate-fade-in-up">
+                <h2 className="text-6xl lg:text-7xl font-black bg-gradient-to-r from-gray-900 via-indigo-900 to-purple-900 bg-clip-text text-transparent leading-tight mb-8 drop-shadow-2xl">
+                  Sistema de Vendas <br className="hidden lg:block" />
+                  <span className="text-5xl lg:text-6xl bg-gradient-to-r from-emerald-600 to-green-600 block">Completo e{' '}
+                  <span className="inline-block animate-pulse bg-gradient-to-r from-yellow-400 to-orange-500 bg-clip-text text-transparent">Rápido</span>
+                  </span>
                 </h2>
-                <p className="text-xl text-gray-600 mb-8 max-w-lg leading-relaxed">
-                  Controle PDV, produtos, clientes e vendas com o melhor sistema para seu negócio. 
-                  Teste grátis até R$5.000 em vendas.
+                <p className="text-2xl text-gray-600 mb-12 max-w-xl leading-relaxed backdrop-blur-sm bg-white/60 rounded-2xl p-8 shadow-2xl">
+                  Controle PDV, produtos, clientes e vendas com o melhor sistema para seu negócio.{' '}
+                  <span className="font-bold text-emerald-600">Teste grátis até R$5.000 em vendas.</span>
                 </p>
-                <div className="grid md:grid-cols-2 gap-4 mb-8">
-                  <div className="flex items-center gap-3 p-3 bg-white/70 rounded-xl shadow-lg">
-                    <Users className="h-6 w-6 text-indigo-600" />
-                    <span className="font-semibold">Clientes ilimitados</span>
+                <div className="grid lg:grid-cols-2 gap-6 mb-12">
+                  <div className="flex items-center gap-4 p-6 bg-white/70 hover:bg-white backdrop-blur-xl rounded-2xl shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-300 border border-white/50">
+                    <div className="w-12 h-12 bg-indigo-100 rounded-2xl flex items-center justify-center">
+                      <Users className="h-6 w-6 text-indigo-600" />
+                    </div>
+                    <span className="text-xl font-bold text-gray-800">Clientes ilimitados</span>
                   </div>
-                  <div className="flex items-center gap-3 p-3 bg-white/70 rounded-xl shadow-lg">
-                    <CreditCard className="h-6 w-6 text-emerald-600" />
-                    <span className="font-semibold">Vendas rápidas</span>
+                  <div className="flex items-center gap-4 p-6 bg-white/70 hover:bg-white backdrop-blur-xl rounded-2xl shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-300 border border-white/50">
+                    <div className="w-12 h-12 bg-emerald-100 rounded-2xl flex items-center justify-center">
+                      <CreditCard className="h-6 w-6 text-emerald-600" />
+                    </div>
+                    <span className="text-xl font-bold text-gray-800">Vendas instantâneas</span>
                   </div>
                 </div>
-                <div className="flex flex-col sm:flex-row gap-4">
-                  <Button size="lg" className="flex-1 gap-2 text-lg h-14" onClick={() => setStep('form')}>
-                    <ArrowRight className="h-5 w-5" />
-                    Começar Grátis
+                <div className="flex flex-col lg:flex-row gap-6">
+                  <Button size="lg" className="flex-1 gap-3 text-xl h-20 bg-gradient-to-r from-emerald-500 via-green-500 to-emerald-600 hover:from-emerald-600 hover:to-green-600 shadow-2xl hover:shadow-3xl font-bold backdrop-blur-sm" onClick={() => setStep('form')}>
+                    <ArrowRight className="h-7 w-7" />
+                    🚀 Começar Grátis Agora
                   </Button>
-                  <Button variant="outline" size="lg" asChild className="flex-1 h-14">
-                    <a href={DOWNLOAD_URL} className="flex items-center gap-2 text-lg">
-                      <Download className="h-5 w-5" />
-                      Baixar Demo
+                  <Button variant="outline" size="lg" asChild className="flex-1 h-20 border-2 border-gray-200 hover:bg-white/80 backdrop-blur-sm text-lg font-bold shadow-xl hover:shadow-2xl">
+                    <a href={DOWNLOAD_URL} className="flex items-center gap-3">
+                      <Download className="h-6 w-6" />
+                      Testar Demo Offline
                     </a>
                   </Button>
                 </div>
               </div>
-              <div className="relative">
-                <img src="/images/icone.png" alt="Sistema PDV" className="w-full max-w-md lg:max-w-lg mx-auto drop-shadow-2xl rounded-3xl" />
+              <div className="relative animate-float">
+                <img 
+                  src="/images/icone.png" 
+                  alt="Sistema PDV Agil Gestão" 
+                  className="w-full max-w-2xl mx-auto drop-shadow-2xl rounded-3xl shadow-2xl hover:scale-105 transition-all duration-500 hover:rotate-3" 
+                  loading="lazy"
+                />
+                <div className="absolute -inset-4 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-3xl blur-xl animate-pulse"></div>
               </div>
             </div>
           </main>
         </div>
       ) : (
-        <div className="max-w-2xl mx-auto px-4 py-12 lg:py-24">
-          <Button variant="ghost" onClick={() => setStep('hero')} className="mb-8">
+        <div className="max-w-4xl mx-auto px-4 py-20 lg:py-32">
+          <Button variant="ghost" onClick={() => setStep('hero')} className="mb-12 hover:bg-white/50 backdrop-blur-sm text-lg">
             ← Voltar ao início
           </Button>
           
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-3xl text-center">Criar Sua Conta</CardTitle>
+          <Card className="backdrop-blur-xl bg-white/80 border-white/50 shadow-2xl">
+            <CardHeader className="text-center">
+              <CardTitle className="text-5xl bg-gradient-to-r from-gray-900 to-indigo-900 bg-clip-text text-transparent font-black">Criar Sua Conta</CardTitle>
             </CardHeader>
             <CardContent>
-              <form onSubmit={handleRegister} className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <form onSubmit={handleRegister} className="space-y-8">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      <User className="h-4 w-4 inline mr-1" />
-                      Nome da Loja
+                    <label className="block text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
+                      <User className="h-6 w-6" />
+                      Nome da Loja *
                     </label>
                     <Input 
                       name="nome" 
                       placeholder="Minha Loja LTDA" 
                       value={formData.nome}
                       onChange={handleInputChange}
+                      className="h-16 text-xl"
                       required 
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      <CreditCard className="h-4 w-4 inline mr-1" />
-                      Plano
+                    <label className="block text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
+                      <CreditCard className="h-6 w-6" />
+                      Plano *
                     </label>
                     <select 
                       name="plano" 
-                      className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                      className="w-full p-4 border-2 border-gray-200 rounded-2xl focus:ring-4 focus:ring-indigo-500/30 focus:border-indigo-500 bg-white/50 backdrop-blur-sm text-xl font-semibold h-16"
                       value={formData.plano}
                       onChange={(e) => handlePlanoChange(e.target.value as any)}
                     >
-                      <option value="gratis">Grátis (até R$5.000)</option>
-                      <option value="mensal">Mensal - R$49,90</option>
-                      <option value="anual">Anual - R$29,90/mês</option>
+                      <option value="gratis">🆓 Grátis (até R$5.000 vendas)</option>
+                      <option value="mensal">💎 Mensal - R$49,90</option>
+                      <option value="anual">👑 Anual - R$29,90/mês (40% OFF)</option>
                     </select>
                   </div>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    <Mail className="h-4 w-4 inline mr-1" />
-                    Email
+                  <label className="block text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
+                    <Mail className="h-6 w-6" />
+                    Email *
                   </label>
                   <Input 
                     type="email" 
@@ -213,13 +232,14 @@ export default function Landing() {
                     placeholder="contato@minhaloja.com" 
                     value={formData.email}
                     onChange={handleInputChange}
+                    className="h-16 text-xl"
                     required 
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    <Lock className="h-4 w-4 inline mr-1" />
-                    Senha
+                  <label className="block text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
+                    <Lock className="h-6 w-6" />
+                    Senha *
                   </label>
                   <Input 
                     type="password" 
@@ -227,58 +247,69 @@ export default function Landing() {
                     placeholder="••••••••" 
                     value={formData.senha}
                     onChange={handleInputChange}
+                    className="h-16 text-xl"
                     required 
                   />
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      <Phone className="h-4 w-4 inline mr-1" />
-                      Telefone (opcional)
+                    <label className="block text-lg font-semibold text-gray-700 mb-4 flex items-center gap-2">
+                      <Phone className="h-6 w-6" />
+                      Telefone
                     </label>
                     <Input 
                       name="telefone" 
                       placeholder="(61) 99999-9999" 
                       value={formData.telefone}
                       onChange={handleInputChange}
+                      className="h-16 text-xl"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      CPF/CNPJ (opcional)
+                    <label className="block text-lg font-semibold text-gray-700 mb-4">
+                      CPF/CNPJ
                     </label>
                     <Input 
                       name="cpf_cnpj" 
                       placeholder="00.000.000/0000-00" 
                       value={formData.cpf_cnpj}
                       onChange={handleInputChange}
+                      className="h-16 text-xl"
                     />
                   </div>
                 </div>
-                <Button type="submit" className="w-full h-14 text-lg" disabled={loading}>
-                  {loading ? 'Criando...' : `Criar Conta ${formData.plano === 'gratis' ? '(Grátis)' : ''}`}
-                  <ArrowRight className="h-5 w-5 ml-2" />
+                <Button type="submit" className="w-full h-20 text-2xl font-black bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 shadow-2xl" disabled={loading}>
+                  {loading ? '🔄 Criando...' : `✅ Criar Conta ${formData.plano === 'gratis' ? '(Grátis)' : ''}`}
+                  <ArrowRight className="h-8 w-8 ml-4" />
                 </Button>
               </form>
             </CardContent>
           </Card>
 
-          <div className="grid md:grid-cols-3 gap-6 mt-12">
-            {planos.map((plano) => (
-              <Card key={plano.id} className={plano.destaque ? "border-2 border-indigo-500" : ""}>
+          <div className="grid md:grid-cols-3 gap-8 mt-20">
+            {planos.map((plano, index) => (
+              <Card 
+                key={plano.id} 
+                className={`backdrop-blur-xl bg-white/70 hover:bg-white/90 border-2 transition-all duration-500 hover:shadow-2xl hover:scale-105 hover:-rotate-1 ${plano.destaque ? "border-emerald-500 shadow-emerald-500/25 ring-4 ring-emerald-500/20" : "border-gray-200"}`}
+                style={{ animationDelay: `${index * 100}ms` }}
+              >
                 <CardHeader>
-                  <CardTitle>{plano.title}</CardTitle>
-                  <CardDescription>{plano.subtitle}</CardDescription>
-                  <div className="text-4xl font-bold text-gray-900 mt-4">{plano.price}</div>
+                  <CardTitle className={`text-2xl font-black ${plano.destaque ? 'bg-gradient-to-r from-emerald-600 to-green-600 bg-clip-text text-transparent' : ''}`}>
+                    {plano.title}
+                  </CardTitle>
+                  <CardDescription className="text-lg">{plano.subtitle}</CardDescription>
+                  <div className={`text-5xl font-black mt-6 ${plano.destaque ? 'bg-gradient-to-r from-emerald-600 to-green-600 bg-clip-text text-transparent drop-shadow-lg' : 'text-gray-900'}`}>
+                    {plano.price}
+                  </div>
                 </CardHeader>
-                <CardContent className="pt-0 pb-6">
+                <CardContent className="pt-0 pb-8">
                   <Button 
                     variant={formData.plano === plano.id ? "default" : "outline"}
-                    className="w-full"
+                    className="w-full h-16 text-lg font-bold shadow-lg"
                     onClick={() => handlePlanoChange(plano.id)}
                     size="lg"
                   >
-                    {formData.plano === plano.id ? 'Selecionado' : 'Escolher'}
+                    {formData.plano === plano.id ? '✅ Selecionado' : '👆 Escolher Plano'}
                   </Button>
                 </CardContent>
               </Card>
@@ -289,4 +320,3 @@ export default function Landing() {
     </div>
   );
 }
-
