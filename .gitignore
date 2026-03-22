@@ -1,0 +1,7 @@
+# See https://vitejs.dev/guide/static-deploy.html#git-ignore-build-outputs
+dist
+build
+node_modules
+.env
+.env.local
+
