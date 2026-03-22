@@ -152,27 +152,6 @@ export default function Landing() {
             </div>
           </div>
 
-          {/* Chave de licença */}
-          <div className="bg-[#0a1628] rounded-2xl p-6 mb-6 text-left border border-white/10">
-            <div className="flex items-center justify-between mb-3">
-              <span className="text-sm font-semibold text-slate-400 uppercase tracking-widest">
-                Chave de Licença
-              </span>
-              <button
-                onClick={handleCopyChave}
-                className="flex items-center gap-1.5 text-emerald-400 hover:text-emerald-300 text-sm font-medium transition-colors"
-              >
-                <Copy className="w-4 h-4" /> Copiar
-              </button>
-            </div>
-            <code className="block font-mono text-lg font-bold text-white break-all tracking-wider">
-              {licencaInfo.chave}
-            </code>
-            <p className="text-slate-500 text-xs mt-3">
-              Use essa chave para ativar o sistema após instalar.
-            </p>
-          </div>
-
           <a
             href={DOWNLOAD_URL}
             download
