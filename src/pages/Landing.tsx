@@ -16,7 +16,6 @@ const DEMO_IMAGES = [
   { src: '/images/model/demo2.jpeg', label: 'PDV — Nova Venda' },
   { src: '/images/model/demo3.jpeg', label: 'Forma de Pagamento' },
   { src: '/images/model/demo4.jpeg', label: 'Relatórios' },
-  { src: '/images/model/demo5.jpeg', label: 'PDV — Carrinho' },
 ];
 
 const SEGMENTOS = [
