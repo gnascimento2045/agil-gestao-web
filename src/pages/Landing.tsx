@@ -1,43 +1,83 @@
-import { useState, useEffect} from 'react';
-import { ArrowRight, Download, Users, CreditCard, Mail, Lock, Phone, User, Copy, CheckCircle } from 'lucide-react';
-import { Button } from '../components/ui/button';
-import { Input } from '../components/ui/input';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
+import { useState, useEffect, useRef } from 'react';
+import {
+  ArrowRight, Download, Users, ShoppingCart, BarChart2,
+  Copy, CheckCircle, Package, Scissors, Store, Truck,
+  MessageCircle, Star, ChevronDown, Monitor, Lock, Mail,
+  Phone, User, CreditCard, X, Menu, Clock, Shield
+} from 'lucide-react';
 import { toast } from 'sonner';
 import { register } from '../services/api';
 
 const DOWNLOAD_URL = 'https://github.com/gnascimento2045/agil-gestao-desktop/releases/download/v1.0.0/Agil.Gestao.Setup.1.0.0.exe';
+const WHATSAPP_URL = 'https://wa.me/5561992724480';
+
+const DEMO_IMAGES = [
+  { src: '/images/models/demo1.jpeg', label: 'Dashboard' },
+  { src: '/images/models/demo2.jpeg', label: 'PDV — Nova Venda' },
+  { src: '/images/models/demo3.jpeg', label: 'Forma de Pagamento' },
+  { src: '/images/models/demo4.jpeg', label: 'Relatórios' },
+  { src: '/images/models/demo5.jpeg', label: 'PDV — Carrinho' },
+];
+
+const SEGMENTOS = [
+  { icon: Truck, label: 'Distribuidoras' },
+  { icon: Store, label: 'Mercados' },
+  { icon: Scissors, label: 'Barbearias' },
+  { icon: Package, label: 'Comércios em geral' },
+];
+
+const FEATURES = [
+  {
+    icon: ShoppingCart,
+    title: 'PDV Completo',
+    desc: 'Frente de caixa rápida com leitura de código de barras, desconto e múltiplas formas de pagamento.',
+    color: 'from-blue-600 to-blue-800',
+  },
+  {
+    icon: Package,
+    title: 'Gestão de Produtos',
+    desc: 'Cadastro, controle de estoque e precificação de forma simples e eficiente.',
+    color: 'from-emerald-600 to-emerald-800',
+  },
+  {
+    icon: BarChart2,
+    title: 'Relatórios',
+    desc: 'Acompanhe produtos mais vendidos, resumo do dia e histórico de vendas.',
+    color: 'from-indigo-600 to-indigo-800',
+  },
+  {
+    icon: Users,
+    title: 'Clientes Ilimitados',
+    desc: 'Cadastre e gerencie sua base de clientes sem limite.',
+    color: 'from-teal-600 to-teal-800',
+  },
+];
 
 export default function Landing() {
-  const [step, setStep] = useState<'hero' | 'form' | 'success'>('hero');
+  const [step, setStep] = useState<'landing' | 'form' | 'success'>('landing');
+  const [activeDemo, setActiveDemo] = useState(0);
+  const [menuOpen, setMenuOpen] = useState(false);
   const [formData, setFormData] = useState({
     nome: '',
     email: '',
     senha: '',
     telefone: '',
     cpf_cnpj: '',
-    plano: 'gratis' as 'gratis' | 'mensal' | 'anual',
+    plano: 'gratis' as any,
   });
   const [loading, setLoading] = useState(false);
   const [licencaChave, setLicencaChave] = useState('');
-  const [isVisible, setIsVisible] = useState(false);
+  const demoRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    setIsVisible(true);
+    const interval = setInterval(() => {
+      setActiveDemo(prev => (prev + 1) % DEMO_IMAGES.length);
+    }, 3500);
+    return () => clearInterval(interval);
   }, []);
 
-  const planos = [
-    { id: 'gratis' as const, title: 'Grátis', subtitle: 'Até R$5.000 em vendas', price: 'R$0', dias: 30, destaque: true },
-    { id: 'mensal' as const, title: 'Mensal', subtitle: 'Plano completo', price: 'R$49,90', dias: 30, destaque: false },
-    { id: 'anual' as const, title: 'Anual', subtitle: 'Economize 40%', price: 'R$29,90/mês', dias: 360, destaque: false },
-  ];
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
-  const handlePlanoChange = (plano: 'gratis' | 'mensal' | 'anual') => {
-    setFormData({ ...formData, plano });
   };
 
   const handleRegister = async (e: React.FormEvent) => {
@@ -48,13 +88,13 @@ export default function Landing() {
         nome: formData.nome,
         email: formData.email,
         senha: formData.senha,
-        plano: formData.plano,
+        plano: 'gratis',
         telefone: formData.telefone || undefined,
         cpf_cnpj: formData.cpf_cnpj || undefined,
       };
       const response = await register(data);
       setLicencaChave(response.data.license.chave);
-      toast.success('Conta criada com sucesso! Sua chave de licença foi gerada.');
+      toast.success('Conta criada! Sua chave de licença foi gerada.');
       setStep('success');
     } catch (error: any) {
       toast.error(error.response?.data?.erro || 'Erro no registro. Tente novamente.');
@@ -68,255 +108,502 @@ export default function Landing() {
     toast.success('Chave copiada!');
   };
 
+  // ── SUCCESS ──────────────────────────────────────────────
   if (step === 'success') {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-emerald-400 via-green-400 to-emerald-500 flex items-center justify-center px-4 py-12 backdrop-blur-sm">
-        <Card className="w-full max-w-md backdrop-blur-xl bg-white/80 border-white/50 shadow-2xl">
-          <CardHeader className="text-center">
-            <div className="w-24 h-24 bg-emerald-100/80 rounded-3xl flex items-center justify-center mx-auto mb-8 shadow-lg animate-pulse">
-              <CheckCircle className="h-12 w-12 text-emerald-600" />
+      <div className="min-h-screen bg-[#0f1e3c] flex items-center justify-center px-4 py-12">
+        <div className="w-full max-w-lg bg-white/5 backdrop-blur border border-white/10 rounded-3xl p-10 shadow-2xl text-center">
+          <div className="w-20 h-20 bg-emerald-500/20 rounded-2xl flex items-center justify-center mx-auto mb-6">
+            <CheckCircle className="w-10 h-10 text-emerald-400" />
+          </div>
+          <h2 className="text-3xl font-bold text-white mb-2">Tudo certo!</h2>
+          <p className="text-slate-400 mb-8">
+            Sua conta foi criada. Você tem{' '}
+            <span className="text-emerald-400 font-semibold">7 dias de teste gratuito</span>.
+          </p>
+
+          <div className="bg-[#0a1628] rounded-2xl p-6 mb-6 text-left border border-white/10">
+            <div className="flex items-center justify-between mb-3">
+              <span className="text-sm font-semibold text-slate-400 uppercase tracking-widest">Chave de Licença</span>
+              <button
+                onClick={handleCopyChave}
+                className="flex items-center gap-1.5 text-emerald-400 hover:text-emerald-300 text-sm font-medium transition-colors"
+              >
+                <Copy className="w-4 h-4" /> Copiar
+              </button>
             </div>
-            <CardTitle className="text-4xl bg-gradient-to-r from-emerald-600 to-green-700 bg-clip-text text-transparent font-bold">Sucesso!</CardTitle>
-            <CardDescription className="text-lg">Sua conta e licença foram criadas.</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-6">
-            <div className="bg-gradient-to-r from-gray-50 to-gray-100/50 p-6 rounded-2xl border border-emerald-100 shadow-inner">
-              <div className="flex items-center justify-between mb-4">
-                <span className="font-bold text-lg text-gray-800">Chave da Licença:</span>
-                <Button variant="ghost" size="icon" onClick={handleCopyChave} className="hover:bg-emerald-100">
-                  <Copy className="h-5 w-5" />
-                </Button>
-              </div>
-              <code className="block bg-gradient-to-r from-white to-gray-50 p-4 rounded-xl font-mono text-xl font-bold text-gray-900 break-all border border-emerald-200 shadow-md">
-                {licencaChave}
-              </code>
-            </div>
-            <Button asChild size="lg" className="w-full bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 h-16 text-lg shadow-xl">
-              <a href={DOWNLOAD_URL} download>
-                <Download className="h-6 w-6 mr-3" />
-                Baixar Agil Gestão (Grátis)
-              </a>
-            </Button>
-            <Button variant="outline" asChild className="w-full h-14 border-2 border-emerald-200 hover:bg-emerald-50">
-              <a href={DOWNLOAD_URL}>
-                🚀 Baixar Agora
-              </a>
-            </Button>
-          </CardContent>
-        </Card>
+            <code className="block font-mono text-lg font-bold text-white break-all">{licencaChave}</code>
+          </div>
+
+          <a
+            href={DOWNLOAD_URL}
+            download
+            className="flex items-center justify-center gap-3 w-full bg-emerald-500 hover:bg-emerald-400 text-white font-bold text-lg py-4 rounded-2xl transition-all duration-200 shadow-lg shadow-emerald-500/30 mb-4"
+          >
+            <Download className="w-5 h-5" />
+            Baixar Agil Gestão
+          </a>
+          <button onClick={() => setStep('landing')} className="text-slate-500 hover:text-slate-300 text-sm transition-colors">
+            ← Voltar ao início
+          </button>
+        </div>
       </div>
     );
   }
 
-  return (
-    <div className={`min-h-screen bg-gradient-to-br from-indigo-50 via-blue-50/50 to-purple-50/30 transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
-      {step === 'hero' ? (
-        <div className="min-h-screen flex flex-col">
-          <header className="px-4 lg:px-8 py-6 backdrop-blur-md">
-            <div className="max-w-7xl mx-auto flex justify-between items-center">
-              <div className="flex items-center gap-4 backdrop-blur-sm bg-white/80 rounded-2xl px-6 py-3 shadow-xl">
-                <img src="/images/logo.png" alt="Agil Gestão" className="h-12 w-12 rounded-2xl shadow-lg animate-bounce-slow" loading="lazy" />
-                <h1 className="text-3xl font-black bg-gradient-to-r from-gray-900 via-indigo-900 to-purple-900 bg-clip-text text-transparent drop-shadow-lg">Agil Gestão</h1>
-              </div>
-              <Button onClick={() => setStep('form')} className="gap-3 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 shadow-xl h-14 px-8 text-lg font-bold animate-pulse-slow">
-                Criar Conta Grátis 
-                <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
-              </Button>
-            </div>
-          </header>
+  // ── FORM ──────────────────────────────────────────────
+  if (step === 'form') {
+    return (
+      <div className="min-h-screen bg-[#0f1e3c] flex items-center justify-center px-4 py-12">
+        <div className="w-full max-w-lg">
+          <button
+            onClick={() => setStep('landing')}
+            className="flex items-center gap-2 text-slate-400 hover:text-white mb-8 transition-colors"
+          >
+            <X className="w-4 h-4" /> Fechar
+          </button>
 
-          <main className="flex-1 flex items-center justify-center px-4 py-16 lg:py-24">
-            <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 lg:gap-32 items-center">
-              <div className="space-y-8 animate-fade-in-up">
-                <h2 className="text-6xl lg:text-7xl font-black bg-gradient-to-r from-gray-900 via-indigo-900 to-purple-900 bg-clip-text text-transparent leading-tight mb-8 drop-shadow-2xl">
-                  Sistema de Vendas <br className="hidden lg:block" />
-                  <span className="text-5xl lg:text-6xl bg-gradient-to-r from-emerald-600 to-green-600 block">Completo e{' '}
-                  <span className="inline-block animate-pulse bg-gradient-to-r from-yellow-400 to-orange-500 bg-clip-text text-transparent">Rápido</span>
-                  </span>
-                </h2>
-                <p className="text-2xl text-gray-600 mb-12 max-w-xl leading-relaxed backdrop-blur-sm bg-white/60 rounded-2xl p-8 shadow-2xl">
-                  Controle PDV, produtos, clientes e vendas com o melhor sistema para seu negócio.{' '}
-                  <span className="font-bold text-emerald-600">Teste grátis até R$5.000 em vendas.</span>
+          <div className="bg-white/5 backdrop-blur border border-white/10 rounded-3xl p-8 shadow-2xl">
+            <div className="flex items-center gap-4 mb-8">
+              <img src="/images/logo.png" alt="Agil Gestão" className="h-12 w-12 rounded-xl" />
+              <div>
+                <h2 className="text-2xl font-bold text-white">Criar Conta Grátis</h2>
+                <p className="text-emerald-400 text-sm font-medium flex items-center gap-1.5">
+                  <Clock className="w-3.5 h-3.5" /> 7 dias de teste sem cartão
                 </p>
-                <div className="grid lg:grid-cols-2 gap-6 mb-12">
-                  <div className="flex items-center gap-4 p-6 bg-white/70 hover:bg-white backdrop-blur-xl rounded-2xl shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-300 border border-white/50">
-                    <div className="w-12 h-12 bg-indigo-100 rounded-2xl flex items-center justify-center">
-                      <Users className="h-6 w-6 text-indigo-600" />
-                    </div>
-                    <span className="text-xl font-bold text-gray-800">Clientes ilimitados</span>
-                  </div>
-                  <div className="flex items-center gap-4 p-6 bg-white/70 hover:bg-white backdrop-blur-xl rounded-2xl shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-300 border border-white/50">
-                    <div className="w-12 h-12 bg-emerald-100 rounded-2xl flex items-center justify-center">
-                      <CreditCard className="h-6 w-6 text-emerald-600" />
-                    </div>
-                    <span className="text-xl font-bold text-gray-800">Vendas instantâneas</span>
-                  </div>
-                </div>
-                <div className="flex flex-col lg:flex-row gap-6">
-                  <Button size="lg" className="flex-1 gap-3 text-xl h-20 bg-gradient-to-r from-emerald-500 via-green-500 to-emerald-600 hover:from-emerald-600 hover:to-green-600 shadow-2xl hover:shadow-3xl font-bold backdrop-blur-sm" onClick={() => setStep('form')}>
-                    <ArrowRight className="h-7 w-7" />
-                    🚀 Começar Grátis Agora
-                  </Button>
-                  <Button variant="outline" size="lg" asChild className="flex-1 h-20 border-2 border-gray-200 hover:bg-white/80 backdrop-blur-sm text-lg font-bold shadow-xl hover:shadow-2xl">
-                    <a href={DOWNLOAD_URL} className="flex items-center gap-3">
-                      <Download className="h-6 w-6" />
-                      Testar Demo Offline
-                    </a>
-                  </Button>
-                </div>
-              </div>
-              <div className="relative animate-float">
-                <img 
-                  src="/images/icone.png" 
-                  alt="Sistema PDV Agil Gestão" 
-                  className="w-full max-w-2xl mx-auto drop-shadow-2xl rounded-3xl shadow-2xl hover:scale-105 transition-all duration-500 hover:rotate-3" 
-                  loading="lazy"
-                />
-                <div className="absolute -inset-4 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-3xl blur-xl animate-pulse"></div>
               </div>
             </div>
-          </main>
-        </div>
-      ) : (
-        <div className="max-w-4xl mx-auto px-4 py-20 lg:py-32">
-          <Button variant="ghost" onClick={() => setStep('hero')} className="mb-12 hover:bg-white/50 backdrop-blur-sm text-lg">
-            ← Voltar ao início
-          </Button>
-          
-          <Card className="backdrop-blur-xl bg-white/80 border-white/50 shadow-2xl">
-            <CardHeader className="text-center">
-              <CardTitle className="text-5xl bg-gradient-to-r from-gray-900 to-indigo-900 bg-clip-text text-transparent font-black">Criar Sua Conta</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <form onSubmit={handleRegister} className="space-y-8">
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                  <div>
-                    <label className="block text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
-                      <User className="h-6 w-6" />
-                      Nome da Loja *
-                    </label>
-                    <Input 
-                      name="nome" 
-                      placeholder="Minha Loja LTDA" 
-                      value={formData.nome}
-                      onChange={handleInputChange}
-                      className="h-16 text-xl"
-                      required 
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
-                      <CreditCard className="h-6 w-6" />
-                      Plano *
-                    </label>
-                    <select 
-                      name="plano" 
-                      className="w-full p-4 border-2 border-gray-200 rounded-2xl focus:ring-4 focus:ring-indigo-500/30 focus:border-indigo-500 bg-white/50 backdrop-blur-sm text-xl font-semibold h-16"
-                      value={formData.plano}
-                      onChange={(e) => handlePlanoChange(e.target.value as any)}
-                    >
-                      <option value="gratis">🆓 Grátis (até R$5.000 vendas)</option>
-                      <option value="mensal">💎 Mensal - R$49,90</option>
-                      <option value="anual">👑 Anual - R$29,90/mês (40% OFF)</option>
-                    </select>
-                  </div>
-                </div>
-                <div>
-                  <label className="block text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
-                    <Mail className="h-6 w-6" />
-                    Email *
-                  </label>
-                  <Input 
-                    type="email" 
-                    name="email"
-                    placeholder="contato@minhaloja.com" 
-                    value={formData.email}
-                    onChange={handleInputChange}
-                    className="h-16 text-xl"
-                    required 
-                  />
-                </div>
-                <div>
-                  <label className="block text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
-                    <Lock className="h-6 w-6" />
-                    Senha *
-                  </label>
-                  <Input 
-                    type="password" 
-                    name="senha"
-                    placeholder="••••••••" 
-                    value={formData.senha}
-                    onChange={handleInputChange}
-                    className="h-16 text-xl"
-                    required 
-                  />
-                </div>
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                  <div>
-                    <label className="block text-lg font-semibold text-gray-700 mb-4 flex items-center gap-2">
-                      <Phone className="h-6 w-6" />
-                      Telefone
-                    </label>
-                    <Input 
-                      name="telefone" 
-                      placeholder="(61) 99999-9999" 
-                      value={formData.telefone}
-                      onChange={handleInputChange}
-                      className="h-16 text-xl"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-lg font-semibold text-gray-700 mb-4">
-                      CPF/CNPJ
-                    </label>
-                    <Input 
-                      name="cpf_cnpj" 
-                      placeholder="00.000.000/0000-00" 
-                      value={formData.cpf_cnpj}
-                      onChange={handleInputChange}
-                      className="h-16 text-xl"
-                    />
-                  </div>
-                </div>
-                <Button type="submit" className="w-full h-20 text-2xl font-black bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 shadow-2xl" disabled={loading}>
-                  {loading ? '🔄 Criando...' : `✅ Criar Conta ${formData.plano === 'gratis' ? '(Grátis)' : ''}`}
-                  <ArrowRight className="h-8 w-8 ml-4" />
-                </Button>
-              </form>
-            </CardContent>
-          </Card>
 
-          <div className="grid md:grid-cols-3 gap-8 mt-20">
-            {planos.map((plano, index) => (
-              <Card 
-                key={plano.id} 
-                className={`backdrop-blur-xl bg-white/70 hover:bg-white/90 border-2 transition-all duration-500 hover:shadow-2xl hover:scale-105 hover:-rotate-1 ${plano.destaque ? "border-emerald-500 shadow-emerald-500/25 ring-4 ring-emerald-500/20" : "border-gray-200"}`}
-                style={{ animationDelay: `${index * 100}ms` }}
+            <form onSubmit={handleRegister} className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-slate-300 mb-1.5">
+                  <User className="w-3.5 h-3.5 inline mr-1.5" />Nome da Loja *
+                </label>
+                <input
+                  name="nome"
+                  placeholder="Minha Loja"
+                  value={formData.nome}
+                  onChange={handleInputChange}
+                  required
+                  className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-slate-300 mb-1.5">
+                  <Mail className="w-3.5 h-3.5 inline mr-1.5" />Email *
+                </label>
+                <input
+                  type="email"
+                  name="email"
+                  placeholder="contato@minhaloja.com"
+                  value={formData.email}
+                  onChange={handleInputChange}
+                  required
+                  className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-slate-300 mb-1.5">
+                  <Lock className="w-3.5 h-3.5 inline mr-1.5" />Senha *
+                </label>
+                <input
+                  type="password"
+                  name="senha"
+                  placeholder="••••••••"
+                  value={formData.senha}
+                  onChange={handleInputChange}
+                  required
+                  className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition"
+                />
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-slate-300 mb-1.5">
+                    <Phone className="w-3.5 h-3.5 inline mr-1.5" />Telefone
+                  </label>
+                  <input
+                    name="telefone"
+                    placeholder="(61) 99999-9999"
+                    value={formData.telefone}
+                    onChange={handleInputChange}
+                    className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-slate-300 mb-1.5">
+                    <CreditCard className="w-3.5 h-3.5 inline mr-1.5" />CPF/CNPJ
+                  </label>
+                  <input
+                    name="cpf_cnpj"
+                    placeholder="00.000.000/0001-00"
+                    value={formData.cpf_cnpj}
+                    onChange={handleInputChange}
+                    className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition"
+                  />
+                </div>
+              </div>
+
+              <div className="bg-emerald-500/10 border border-emerald-500/30 rounded-xl p-4 flex gap-3">
+                <Shield className="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" />
+                <p className="text-sm text-emerald-300">
+                  Teste grátis por <strong>7 dias</strong>. Sem cartão de crédito.
+                  Após o período, escolha um plano para continuar.
+                </p>
+              </div>
+
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full bg-emerald-500 hover:bg-emerald-400 disabled:opacity-50 text-white font-bold text-lg py-4 rounded-2xl transition-all duration-200 shadow-lg shadow-emerald-500/30 flex items-center justify-center gap-2"
               >
-                <CardHeader>
-                  <CardTitle className={`text-2xl font-black ${plano.destaque ? 'bg-gradient-to-r from-emerald-600 to-green-600 bg-clip-text text-transparent' : ''}`}>
-                    {plano.title}
-                  </CardTitle>
-                  <CardDescription className="text-lg">{plano.subtitle}</CardDescription>
-                  <div className={`text-5xl font-black mt-6 ${plano.destaque ? 'bg-gradient-to-r from-emerald-600 to-green-600 bg-clip-text text-transparent drop-shadow-lg' : 'text-gray-900'}`}>
-                    {plano.price}
-                  </div>
-                </CardHeader>
-                <CardContent className="pt-0 pb-8">
-                  <Button 
-                    variant={formData.plano === plano.id ? "default" : "outline"}
-                    className="w-full h-16 text-lg font-bold shadow-lg"
-                    onClick={() => handlePlanoChange(plano.id)}
-                    size="lg"
-                  >
-                    {formData.plano === plano.id ? '✅ Selecionado' : '👆 Escolher Plano'}
-                  </Button>
-                </CardContent>
-              </Card>
+                {loading ? 'Criando...' : (
+                  <><ArrowRight className="w-5 h-5" /> Começar Teste Grátis</>
+                )}
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // ── LANDING ──────────────────────────────────────────────
+  return (
+    <div className="min-h-screen bg-[#0f1e3c] text-white">
+
+      {/* NAV */}
+      <nav className="sticky top-0 z-50 bg-[#0f1e3c]/90 backdrop-blur-md border-b border-white/5">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 flex items-center justify-between h-20">
+          <div className="flex items-center gap-3">
+            <img src="/images/logo.png" alt="Agil Gestão" className="h-8 w-30 rounded-lg" />
+            <span className="font-bold text-lg tracking-tight"></span>
+          </div>
+          <div className="hidden md:flex items-center gap-8 text-sm text-slate-300">
+            <a href="#funcionalidades" className="hover:text-white transition-colors">Funcionalidades</a>
+            <a href="#demonstracao" className="hover:text-white transition-colors">Demonstração</a>
+            <a href="#planos" className="hover:text-white transition-colors">Planos</a>
+            <a href={WHATSAPP_URL} target="_blank" rel="noreferrer" className="hover:text-white transition-colors">Suporte</a>
+          </div>
+          <div className="hidden md:flex items-center gap-3">
+            <button
+              onClick={() => setStep('form')}
+              className="bg-emerald-500 hover:bg-emerald-400 text-white font-semibold px-5 py-2.5 rounded-xl text-sm transition-all"
+            >
+              Teste Grátis
+            </button>
+          </div>
+          <button className="md:hidden text-slate-300" onClick={() => setMenuOpen(!menuOpen)}>
+            {menuOpen ? <X /> : <Menu />}
+          </button>
+        </div>
+        {menuOpen && (
+          <div className="md:hidden bg-[#0f1e3c] border-t border-white/5 px-4 py-4 space-y-3 text-sm text-slate-300">
+            <a href="#funcionalidades" className="block hover:text-white" onClick={() => setMenuOpen(false)}>Funcionalidades</a>
+            <a href="#demonstracao" className="block hover:text-white" onClick={() => setMenuOpen(false)}>Demonstração</a>
+            <a href="#planos" className="block hover:text-white" onClick={() => setMenuOpen(false)}>Planos</a>
+            <a href={WHATSAPP_URL} target="_blank" rel="noreferrer" className="block hover:text-white">Suporte</a>
+            <button onClick={() => setStep('form')} className="w-full bg-emerald-500 text-white font-semibold py-3 rounded-xl">
+              Teste Grátis
+            </button>
+          </div>
+        )}
+      </nav>
+
+      {/* HERO */}
+      <section className="relative overflow-hidden pt-20 pb-28 px-4">
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-blue-600/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute top-20 right-0 w-72 h-72 bg-emerald-500/8 rounded-full blur-3xl pointer-events-none" />
+
+        <div className="max-w-6xl mx-auto grid lg:grid-cols-2 gap-12 items-center relative">
+          <div>
+            <div className="inline-flex items-center gap-2 bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-sm font-medium px-4 py-2 rounded-full mb-6">
+              <Star className="w-3.5 h-3.5 fill-emerald-400" />
+              7 dias grátis — sem cartão de crédito
+            </div>
+            <h1 className="text-5xl lg:text-6xl font-black leading-tight mb-6">
+              Sistema de Gestão para o seu{' '}
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-300">
+                Negócio
+              </span>
+            </h1>
+            <p className="text-lg text-slate-400 mb-8 leading-relaxed max-w-lg">
+              PDV, controle de estoque, relatórios e muito mais. Ideal para distribuidoras,
+              mercados, barbearias e comércios em geral.
+            </p>
+
+            <div className="flex flex-col sm:flex-row gap-4">
+              <button
+                onClick={() => setStep('form')}
+                className="flex items-center justify-center gap-2 bg-emerald-500 hover:bg-emerald-400 text-white font-bold text-lg px-8 py-4 rounded-2xl transition-all duration-200 shadow-xl shadow-emerald-500/25"
+              >
+                <ArrowRight className="w-5 h-5" /> Começar Grátis
+              </button>
+              <a
+                href={DOWNLOAD_URL}
+                download
+                className="flex items-center justify-center gap-2 bg-white/5 hover:bg-white/10 border border-white/10 text-white font-semibold px-8 py-4 rounded-2xl transition-all"
+              >
+                <Download className="w-5 h-5" /> Baixar Agora
+              </a>
+            </div>
+
+            <div className="flex flex-wrap gap-6 mt-10 text-sm text-slate-400">
+              {SEGMENTOS.map(({ icon: Icon, label }) => (
+                <span key={label} className="flex items-center gap-2">
+                  <Icon className="w-4 h-4 text-emerald-400" /> {label}
+                </span>
+              ))}
+            </div>
+          </div>
+
+          <div className="relative">
+            <div className="absolute inset-0 bg-gradient-to-r from-blue-600/20 to-emerald-600/10 rounded-3xl blur-2xl" />
+            <div className="relative bg-[#162340] border border-white/10 rounded-3xl overflow-hidden shadow-2xl">
+              <div className="bg-[#0a1628] px-4 py-3 flex items-center gap-2 border-b border-white/5">
+                <div className="flex gap-1.5">
+                  <div className="w-3 h-3 bg-red-500/60 rounded-full" />
+                  <div className="w-3 h-3 bg-yellow-500/60 rounded-full" />
+                  <div className="w-3 h-3 bg-emerald-500/60 rounded-full" />
+                </div>
+                <span className="text-xs text-slate-500 mx-auto">Ágil Gestão</span>
+              </div>
+              <img
+                src={DEMO_IMAGES[0].src}
+                alt="Dashboard Agil Gestão"
+                className="w-full object-cover"
+              />
+            </div>
+          </div>
+        </div>
+
+        <div className="flex justify-center mt-16">
+          <a href="#funcionalidades" className="text-slate-500 hover:text-slate-300 transition-colors animate-bounce">
+            <ChevronDown className="w-6 h-6" />
+          </a>
+        </div>
+      </section>
+
+      {/* FUNCIONALIDADES */}
+      <section id="funcionalidades" className="py-24 px-4 bg-[#0a1628]">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-black mb-4">Tudo que você precisa</h2>
+            <p className="text-slate-400 text-lg max-w-xl mx-auto">
+              Um sistema completo pensado para simplificar a gestão do seu negócio.
+            </p>
+          </div>
+
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {FEATURES.map(({ icon: Icon, title, desc, color }) => (
+              <div
+                key={title}
+                className="bg-white/3 hover:bg-white/6 border border-white/8 rounded-2xl p-6 transition-all duration-300 group"
+              >
+                <div
+                  className={`w-12 h-12 bg-gradient-to-br ${color} rounded-xl flex items-center justify-center mb-5 shadow-lg group-hover:scale-110 transition-transform`}
+                >
+                  <Icon className="w-6 h-6 text-white" />
+                </div>
+                <h3 className="font-bold text-lg mb-2">{title}</h3>
+                <p className="text-slate-400 text-sm leading-relaxed">{desc}</p>
+              </div>
             ))}
           </div>
         </div>
-      )}
+      </section>
+
+      {/* DEMONSTRAÇÃO */}
+      <section id="demonstracao" ref={demoRef} className="py-24 px-4">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-black mb-4">Veja em ação</h2>
+            <p className="text-slate-400 text-lg">Interface limpa e intuitiva para você e sua equipe.</p>
+          </div>
+
+          <div className="grid lg:grid-cols-5 gap-8 items-start">
+            <div className="lg:col-span-2 flex lg:flex-col gap-3 overflow-x-auto lg:overflow-visible pb-2 lg:pb-0">
+              {DEMO_IMAGES.map((item, i) => (
+                <button
+                  key={i}
+                  onClick={() => setActiveDemo(i)}
+                  className={`flex-shrink-0 flex items-center gap-3 px-4 py-3 rounded-xl text-left transition-all text-sm font-medium border ${activeDemo === i
+                      ? 'bg-blue-600/20 border-blue-500/50 text-white'
+                      : 'bg-white/3 border-white/8 text-slate-400 hover:text-white hover:bg-white/6'
+                    }`}
+                >
+                  <Monitor className="w-4 h-4 flex-shrink-0" />
+                  {item.label}
+                </button>
+              ))}
+            </div>
+
+            <div className="lg:col-span-3">
+              <div className="bg-[#162340] border border-white/10 rounded-2xl overflow-hidden shadow-2xl">
+                <div className="bg-[#0a1628] px-4 py-3 flex items-center gap-2 border-b border-white/5">
+                  <div className="flex gap-1.5">
+                    <div className="w-2.5 h-2.5 bg-red-500/60 rounded-full" />
+                    <div className="w-2.5 h-2.5 bg-yellow-500/60 rounded-full" />
+                    <div className="w-2.5 h-2.5 bg-emerald-500/60 rounded-full" />
+                  </div>
+                  <span className="text-xs text-slate-500 mx-auto">{DEMO_IMAGES[activeDemo].label}</span>
+                </div>
+                <img
+                  key={activeDemo}
+                  src={DEMO_IMAGES[activeDemo].src}
+                  alt={DEMO_IMAGES[activeDemo].label}
+                  className="w-full object-cover"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* PLANOS */}
+      <section id="planos" className="py-24 px-4 bg-[#0a1628]">
+        <div className="max-w-4xl mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-black mb-4">Planos simples</h2>
+            <p className="text-slate-400 text-lg">Comece grátis por 7 dias. Sem cartão de crédito.</p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-6">
+            {/* Trial */}
+            <div className="bg-gradient-to-b from-emerald-600/20 to-emerald-600/5 border-2 border-emerald-500/50 rounded-2xl p-7 relative">
+              <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-emerald-500 text-white text-xs font-bold px-3 py-1 rounded-full">
+                COMECE AQUI
+              </div>
+              <div className="flex items-center gap-2 mb-1">
+                <Clock className="w-4 h-4 text-emerald-400" />
+                <span className="text-emerald-400 font-semibold text-sm">Teste Grátis</span>
+              </div>
+              <div className="text-4xl font-black mb-1">R$ 0</div>
+              <p className="text-slate-400 text-sm mb-6">7 dias sem restrições</p>
+              <ul className="space-y-2.5 text-sm text-slate-300 mb-8">
+                {['PDV completo', 'Produtos e estoque', 'Relatórios', 'Suporte via WhatsApp'].map(f => (
+                  <li key={f} className="flex items-center gap-2">
+                    <CheckCircle className="w-4 h-4 text-emerald-400 flex-shrink-0" /> {f}
+                  </li>
+                ))}
+              </ul>
+              <button
+                onClick={() => setStep('form')}
+                className="w-full bg-emerald-500 hover:bg-emerald-400 text-white font-bold py-3 rounded-xl transition-all"
+              >
+                Começar Grátis
+              </button>
+            </div>
+
+            {/* Mensal */}
+            <div className="bg-white/3 border border-white/10 rounded-2xl p-7">
+              <div className="flex items-center gap-2 mb-1">
+                <Star className="w-4 h-4 text-blue-400" />
+                <span className="text-blue-400 font-semibold text-sm">Mensal</span>
+              </div>
+              <div className="text-4xl font-black mb-1">
+                R$ 49<span className="text-xl text-slate-400">,90/mês</span>
+              </div>
+              <p className="text-slate-400 text-sm mb-6">Acesso completo</p>
+              <ul className="space-y-2.5 text-sm text-slate-300 mb-8">
+                {['Tudo do plano teste', 'Sem limite de vendas', 'Atualizações inclusas', 'Suporte prioritário'].map(f => (
+                  <li key={f} className="flex items-center gap-2">
+                    <CheckCircle className="w-4 h-4 text-blue-400 flex-shrink-0" /> {f}
+                  </li>
+                ))}
+              </ul>
+              <a
+                href={WHATSAPP_URL}
+                target="_blank"
+                rel="noreferrer"
+                className="flex items-center justify-center gap-2 w-full bg-white/5 hover:bg-white/10 border border-white/10 text-white font-bold py-3 rounded-xl transition-all"
+              >
+                <MessageCircle className="w-4 h-4" /> Contratar
+              </a>
+            </div>
+
+            {/* Anual */}
+            <div className="bg-white/3 border border-white/10 rounded-2xl p-7">
+              <div className="flex items-center gap-2 mb-1">
+                <Star className="w-4 h-4 text-yellow-400 fill-yellow-400" />
+                <span className="text-yellow-400 font-semibold text-sm">Anual — 40% OFF</span>
+              </div>
+              <div className="text-4xl font-black mb-1">
+                R$ 29<span className="text-xl text-slate-400">,90/mês</span>
+              </div>
+              <p className="text-slate-400 text-sm mb-6">Cobrado anualmente</p>
+              <ul className="space-y-2.5 text-sm text-slate-300 mb-8">
+                {['Tudo do plano mensal', 'Economia de R$ 240/ano', 'Suporte VIP', 'Licença anual garantida'].map(f => (
+                  <li key={f} className="flex items-center gap-2">
+                    <CheckCircle className="w-4 h-4 text-yellow-400 flex-shrink-0" /> {f}
+                  </li>
+                ))}
+              </ul>
+              <a
+                href={WHATSAPP_URL}
+                target="_blank"
+                rel="noreferrer"
+                className="flex items-center justify-center gap-2 w-full bg-white/5 hover:bg-white/10 border border-white/10 text-white font-bold py-3 rounded-xl transition-all"
+              >
+                <MessageCircle className="w-4 h-4" /> Contratar
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA */}
+      <section className="py-20 px-4">
+        <div className="max-w-2xl mx-auto text-center">
+          <h2 className="text-4xl font-black mb-4">Pronto para começar?</h2>
+          <p className="text-slate-400 text-lg mb-8">Baixe agora e teste por 7 dias sem compromisso.</p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <button
+              onClick={() => setStep('form')}
+              className="flex items-center justify-center gap-2 bg-emerald-500 hover:bg-emerald-400 text-white font-bold text-lg px-8 py-4 rounded-2xl transition-all shadow-xl shadow-emerald-500/25"
+            >
+              <ArrowRight className="w-5 h-5" /> Criar Conta Grátis
+            </button>
+            <a
+              href={WHATSAPP_URL}
+              target="_blank"
+              rel="noreferrer"
+              className="flex items-center justify-center gap-2 bg-[#25D366]/10 hover:bg-[#25D366]/20 border border-[#25D366]/30 text-[#25D366] font-bold text-lg px-8 py-4 rounded-2xl transition-all"
+            >
+              <MessageCircle className="w-5 h-5" /> Falar no WhatsApp
+            </a>
+          </div>
+        </div>
+      </section>
+
+      {/* FOOTER */}
+      <footer className="border-t border-white/5 py-10 px-4">
+        <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-6">
+          <div className="flex items-center gap-3">
+            <img src="/images/logo.png" alt="Agil Gestão" className="h-8 w-8 rounded-lg" />
+            <span className="font-bold text-slate-300">Ágil Gestão</span>
+          </div>
+          <p className="text-slate-500 text-sm">© {new Date().getFullYear()} Ágil Gestão. Todos os direitos reservados.</p>
+          <a
+            href={WHATSAPP_URL}
+            target="_blank"
+            rel="noreferrer"
+            className="flex items-center gap-2 text-[#25D366] hover:text-[#1fbe5a] text-sm font-medium transition-colors"
+          >
+            <MessageCircle className="w-4 h-4" /> Suporte WhatsApp
+          </a>
+        </div>
+      </footer>
+
+      {/* WhatsApp floating button */}
+      <a
+        href={WHATSAPP_URL}
+        target="_blank"
+        rel="noreferrer"
+        className="fixed bottom-6 right-6 z-50 w-14 h-14 bg-[#25D366] hover:bg-[#1fbe5a] rounded-full flex items-center justify-center shadow-xl shadow-[#25D366]/30 transition-all hover:scale-110"
+        title="Suporte via WhatsApp"
+      >
+        <MessageCircle className="w-6 h-6 text-white" />
+      </a>
     </div>
   );
 }

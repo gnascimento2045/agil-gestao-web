@@ -1,19 +1,10 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
-import { viteStaticCopy } from 'vite-plugin-static-copy'
 import path from 'path'
 
 export default defineConfig({
   plugins: [
     react(),
-    viteStaticCopy({
-      targets: [
-        {
-          src: 'public/images/*',
-          dest: 'images'
-        }
-      ]
-    })
   ],
   resolve: {
     alias: {
@@ -21,8 +12,7 @@ export default defineConfig({
     },
   },
   define: {
-    global: 'globalThis',
-    'import.meta.env.VITE_API_URL': JSON.stringify('https://agil-gestao-api.onrender.com'),
+    'import.meta.env.VITE_API_URL': JSON.stringify(process.env.VITE_API_URL || 'https://agil-gestao-api.onrender.com'),
   },
   optimizeDeps: {
     esbuildOptions: {
@@ -31,24 +21,18 @@ export default defineConfig({
       },
     },
   },
-  css: {
-    devSourcemap: true,
-    modules: false,
-    preprocessorOptions: {
-      scss: {}
-    }
-  },
   build: {
     cssCodeSplit: true,
     rollupOptions: {
       output: {
         manualChunks: {
-          vendor: ['react', 'react-dom', 'lucide-react'],
-          ui: ['class-variance-authority', 'clsx', 'tailwind-merge']
+          vendor: ['react', 'react-dom'],
+          icons: ['lucide-react'],
+          ui: ['class-variance-authority', 'clsx', 'tailwind-merge'],
         },
       },
     },
-    sourcemap: true,
+    sourcemap: false,
     minify: 'terser',
     terserOptions: {
       compress: {
@@ -60,12 +44,9 @@ export default defineConfig({
   server: {
     port: 5173,
     host: true,
-    hmr: {
-      overlay: true
-    }
   },
   preview: {
     port: 4173,
-    host: true
-  }
+    host: true,
+  },
 })

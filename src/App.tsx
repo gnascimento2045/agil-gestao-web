@@ -9,8 +9,7 @@ export default function App() {
         <Route path="/" element={<Landing />} />
         <Route path="*" element={<Landing />} />
       </Routes>
-      <Toaster />
+      <Toaster richColors position="top-right" />
     </>
   );
 }
-
