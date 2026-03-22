@@ -8,15 +8,15 @@ import {
 import { toast } from 'sonner';
 import { register } from '../services/api';
 
-const DOWNLOAD_URL = 'https://github.com/gnascimento2045/agil-gestao-web/releases/download/v1.0.0/Agil.Gestao.Setup.1.0.0.exe';
+const DOWNLOAD_URL = 'https://github.com/gnascimento2045/agil-gestao-desktop/releases/download/v1.0.0/Agil.Gestao.Setup.1.0.0.exe';
 const WHATSAPP_URL = 'https://wa.me/5561992724480';
 
 const DEMO_IMAGES = [
-  { src: '/images/models/demo1.jpeg', label: 'Dashboard' },
-  { src: '/images/models/demo2.jpeg', label: 'PDV — Nova Venda' },
-  { src: '/images/models/demo3.jpeg', label: 'Forma de Pagamento' },
-  { src: '/images/models/demo4.jpeg', label: 'Relatórios' },
-  { src: '/images/models/demo5.jpeg', label: 'PDV — Carrinho' },
+  { src: '/images/model/demo1.jpeg', label: 'Dashboard' },
+  { src: '/images/model/demo2.jpeg', label: 'PDV — Nova Venda' },
+  { src: '/images/model/demo3.jpeg', label: 'Forma de Pagamento' },
+  { src: '/images/model/demo4.jpeg', label: 'Relatórios' },
+  { src: '/images/model/demo5.jpeg', label: 'PDV — Carrinho' },
 ];
 
 const SEGMENTOS = [
@@ -273,10 +273,10 @@ export default function Landing() {
 
       {/* NAV */}
       <nav className="sticky top-0 z-50 bg-[#0f1e3c]/90 backdrop-blur-md border-b border-white/5">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 flex items-center justify-between h-20">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 flex items-center justify-between h-16">
           <div className="flex items-center gap-3">
-            <img src="/images/logo.png" alt="Agil Gestão" className="h-8 w-30 rounded-lg" />
-            <span className="font-bold text-lg tracking-tight"></span>
+            <img src="/images/logo.png" alt="Agil Gestão" className="h-9 w-9 rounded-lg" />
+            <span className="font-bold text-lg tracking-tight">Ágil Gestão</span>
           </div>
           <div className="hidden md:flex items-center gap-8 text-sm text-slate-300">
             <a href="#funcionalidades" className="hover:text-white transition-colors">Funcionalidades</a>
@@ -368,7 +368,7 @@ export default function Landing() {
                 <span className="text-xs text-slate-500 mx-auto">Ágil Gestão</span>
               </div>
               <img
-                src={DEMO_IMAGES[0].src}
+                src="/images/model/demo1.jpeg"
                 alt="Dashboard Agil Gestão"
                 className="w-full object-cover"
               />
@@ -426,10 +426,11 @@ export default function Landing() {
                 <button
                   key={i}
                   onClick={() => setActiveDemo(i)}
-                  className={`flex-shrink-0 flex items-center gap-3 px-4 py-3 rounded-xl text-left transition-all text-sm font-medium border ${activeDemo === i
+                  className={`flex-shrink-0 flex items-center gap-3 px-4 py-3 rounded-xl text-left transition-all text-sm font-medium border ${
+                    activeDemo === i
                       ? 'bg-blue-600/20 border-blue-500/50 text-white'
                       : 'bg-white/3 border-white/8 text-slate-400 hover:text-white hover:bg-white/6'
-                    }`}
+                  }`}
                 >
                   <Monitor className="w-4 h-4 flex-shrink-0" />
                   {item.label}
