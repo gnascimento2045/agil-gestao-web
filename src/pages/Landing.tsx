@@ -3,7 +3,7 @@ import {
   ArrowRight, Download, Users, ShoppingCart, BarChart2,
   Copy, CheckCircle, Package, Scissors, Store, Truck,
   MessageCircle, Star, ChevronDown, Monitor, Lock, Mail,
-  Phone, User, CreditCard, X, Menu, Clock, Shield
+  Phone, User, CreditCard, X, Menu, Clock, Shield, Calendar
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { register } from '../services/api';
@@ -16,6 +16,7 @@ const DEMO_IMAGES = [
   { src: '/images/model/demo2.jpeg', label: 'PDV — Nova Venda' },
   { src: '/images/model/demo3.jpeg', label: 'Forma de Pagamento' },
   { src: '/images/model/demo4.jpeg', label: 'Relatórios' },
+  { src: '/images/model/demo5.jpeg', label: 'PDV — Carrinho' },
 ];
 
 const SEGMENTOS = [
@@ -52,6 +53,12 @@ const FEATURES = [
   },
 ];
 
+interface LicencaInfo {
+  chave: string;
+  dataExpiracao: string;
+  diasRestantes: number;
+}
+
 export default function Landing() {
   const [step, setStep] = useState<'landing' | 'form' | 'success'>('landing');
   const [activeDemo, setActiveDemo] = useState(0);
@@ -65,7 +72,7 @@ export default function Landing() {
     plano: 'gratis' as any,
   });
   const [loading, setLoading] = useState(false);
-  const [licencaChave, setLicencaChave] = useState('');
+  const [licencaInfo, setLicencaInfo] = useState<LicencaInfo | null>(null);
   const demoRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -92,7 +99,12 @@ export default function Landing() {
         cpf_cnpj: formData.cpf_cnpj || undefined,
       };
       const response = await register(data);
-      setLicencaChave(response.data.license.chave);
+      const { license } = response.data;
+      setLicencaInfo({
+        chave: license.chave,
+        dataExpiracao: license.dataExpiracao,
+        diasRestantes: license.diasRestantes ?? 7,
+      });
       toast.success('Conta criada! Sua chave de licença foi gerada.');
       setStep('success');
     } catch (error: any) {
@@ -103,12 +115,19 @@ export default function Landing() {
   };
 
   const handleCopyChave = () => {
-    navigator.clipboard.writeText(licencaChave);
+    if (!licencaInfo) return;
+    navigator.clipboard.writeText(licencaInfo.chave);
     toast.success('Chave copiada!');
   };
 
+  const formatarData = (iso: string) => {
+    return new Date(iso).toLocaleDateString('pt-BR', {
+      day: '2-digit', month: 'long', year: 'numeric'
+    });
+  };
+
   // ── SUCCESS ──────────────────────────────────────────────
-  if (step === 'success') {
+  if (step === 'success' && licencaInfo) {
     return (
       <div className="min-h-screen bg-[#0f1e3c] flex items-center justify-center px-4 py-12">
         <div className="w-full max-w-lg bg-white/5 backdrop-blur border border-white/10 rounded-3xl p-10 shadow-2xl text-center">
@@ -117,13 +136,28 @@ export default function Landing() {
           </div>
           <h2 className="text-3xl font-bold text-white mb-2">Tudo certo!</h2>
           <p className="text-slate-400 mb-8">
-            Sua conta foi criada. Você tem{' '}
-            <span className="text-emerald-400 font-semibold">7 dias de teste gratuito</span>.
+            Sua conta foi criada com sucesso.
           </p>
 
+          {/* Aviso de expiração */}
+          <div className="bg-amber-500/10 border border-amber-500/30 rounded-xl p-4 flex items-start gap-3 mb-6 text-left">
+            <Calendar className="w-5 h-5 text-amber-400 flex-shrink-0 mt-0.5" />
+            <div>
+              <p className="text-amber-300 font-semibold text-sm">
+                Período de teste: {licencaInfo.diasRestantes} dias
+              </p>
+              <p className="text-amber-400/70 text-sm mt-0.5">
+                Expira em <strong>{formatarData(licencaInfo.dataExpiracao)}</strong>. Após esse prazo, contrate um plano para continuar usando.
+              </p>
+            </div>
+          </div>
+
+          {/* Chave de licença */}
           <div className="bg-[#0a1628] rounded-2xl p-6 mb-6 text-left border border-white/10">
             <div className="flex items-center justify-between mb-3">
-              <span className="text-sm font-semibold text-slate-400 uppercase tracking-widest">Chave de Licença</span>
+              <span className="text-sm font-semibold text-slate-400 uppercase tracking-widest">
+                Chave de Licença
+              </span>
               <button
                 onClick={handleCopyChave}
                 className="flex items-center gap-1.5 text-emerald-400 hover:text-emerald-300 text-sm font-medium transition-colors"
@@ -131,17 +165,33 @@ export default function Landing() {
                 <Copy className="w-4 h-4" /> Copiar
               </button>
             </div>
-            <code className="block font-mono text-lg font-bold text-white break-all">{licencaChave}</code>
+            <code className="block font-mono text-lg font-bold text-white break-all tracking-wider">
+              {licencaInfo.chave}
+            </code>
+            <p className="text-slate-500 text-xs mt-3">
+              Use essa chave para ativar o sistema após instalar.
+            </p>
           </div>
 
           <a
             href={DOWNLOAD_URL}
             download
-            className="flex items-center justify-center gap-3 w-full bg-emerald-500 hover:bg-emerald-400 text-white font-bold text-lg py-4 rounded-2xl transition-all duration-200 shadow-lg shadow-emerald-500/30 mb-4"
+            className="flex items-center justify-center gap-3 w-full bg-emerald-500 hover:bg-emerald-400 text-white font-bold text-lg py-4 rounded-2xl transition-all duration-200 shadow-lg shadow-emerald-500/30 mb-3"
           >
             <Download className="w-5 h-5" />
             Baixar Agil Gestão
           </a>
+
+          <a
+            href={WHATSAPP_URL}
+            target="_blank"
+            rel="noreferrer"
+            className="flex items-center justify-center gap-2 w-full bg-white/5 hover:bg-white/10 border border-white/10 text-slate-300 font-medium py-3 rounded-2xl transition-all mb-4 text-sm"
+          >
+            <MessageCircle className="w-4 h-4 text-[#25D366]" />
+            Precisa de ajuda? Fale no WhatsApp
+          </a>
+
           <button onClick={() => setStep('landing')} className="text-slate-500 hover:text-slate-300 text-sm transition-colors">
             ← Voltar ao início
           </button>
