@@ -1,8 +1,7 @@
 import { useState } from 'react';
 import {
   ArrowRight, Check, X, Download, MessageCircle,
-  Clock, Shield, Zap, TrendingUp, Users, BarChart3,
-  Package, Sparkles, ChevronRight, Menu, CreditCard,
+  Clock, Shield, Zap, Sparkles, ChevronRight, Menu,
   Crown, CalendarDays
 } from 'lucide-react';
 import { toast } from 'sonner';
@@ -100,6 +99,13 @@ export default function Landing() {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4 py-12">
         <div className="w-full max-w-md">
+          <button
+            onClick={() => setStep('form')}
+            className="flex items-center gap-2 text-gray-400 hover:text-gray-600 mb-8 transition-colors"
+          >
+            <ChevronRight className="w-4 h-4 rotate-180" /> Voltar
+          </button>
+
           <div className="text-center mb-8">
             <div className="w-20 h-20 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-6">
               <Check className="w-10 h-10 text-emerald-600" />
@@ -109,26 +115,12 @@ export default function Landing() {
           </div>
 
           <div className="bg-white border border-gray-200 rounded-2xl p-6 mb-6 shadow-sm">
-            <p className="text-xs text-gray-500 uppercase tracking-wider mb-2">Sua chave de ativação</p>
-            <div className="flex items-center gap-3">
-              <code className="flex-1 bg-gray-100 rounded-lg px-4 py-3 text-sm text-emerald-600 font-mono truncate">
-                {licencaInfo.chave}
-              </code>
-              <button
-                onClick={handleCopyChave}
-                className="p-3 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors"
-              >
-                <Check className="w-4 h-4 text-gray-600" />
-              </button>
-            </div>
-            <div className="mt-4 pt-4 border-t border-gray-100">
-              <p className="text-sm text-gray-600">
-                <span className="font-medium">Plano:</span> {getPlanoLabel()}
-              </p>
-              <p className="text-sm text-gray-600 mt-1">
-                <span className="font-medium">Válida até:</span> {formatarData(licencaInfo.dataExpiracao)}
-              </p>
-            </div>
+            <p className="text-sm text-gray-600 mb-2">
+              <span className="font-medium">Plano:</span> {getPlanoLabel()}
+            </p>
+            <p className="text-sm text-gray-600">
+              <span className="font-medium">Válida até:</span> {formatarData(licencaInfo.dataExpiracao)}
+            </p>
           </div>
 
           <a
@@ -267,7 +259,7 @@ export default function Landing() {
                   </div>
                   <p className="text-sm text-gray-500 mt-1">Economia de R$ 168/ano</p>
                 </div>
-                <span className="font-bold text-gray-900">R$ 29,90<span className="text-sm font-normal text-gray-500">/mês</span></span>
+                <span className="font-bold text-gray-900">R$ 15,90<span className="text-sm font-normal text-gray-500">/mês</span></span>
               </label>
             </div>
           </div>
@@ -383,37 +375,153 @@ export default function Landing() {
       </nav>
 
       {/* 1. HERO */}
-      <section className="pt-32 pb-20 px-6">
-        <div className="max-w-4xl mx-auto text-center">
-          <div className="inline-flex items-center gap-2 bg-emerald-100 text-emerald-700 text-xs font-medium px-4 py-2 rounded-full mb-6">
+      <section className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden pt-24 pb-16">
+        {/* Background Gradient */}
+        <div className="absolute inset-0 bg-gradient-to-br from-white via-emerald-50/50 via-lime-50/30 via-white to-black" />
+        <div className="absolute inset-0 bg-gradient-to-tr from-orange-500/10 via-transparent to-emerald-500/10" />
+        <div className="absolute inset-0 bg-gradient-to-bl from-black/5 via-transparent to-orange-500/10" />
+        
+        {/* Decorative Blobs */}
+        <div className="absolute top-20 left-10 w-72 h-72 bg-gradient-to-br from-orange-400 to-red-500 rounded-full blur-3xl opacity-20" />
+        <div className="absolute bottom-20 right-10 w-96 h-96 bg-gradient-to-tr from-emerald-400 to-lime-500 rounded-full blur-3xl opacity-15" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-gradient-to-r from-black/5 to-orange-500/10 rounded-full blur-3xl" />
+
+        {/* Floating macOS Tabs */}
+        <div className="relative w-full max-w-7xl mx-auto px-6 perspective-1000">
+          <div className="flex flex-wrap justify-center items-end gap-4 py-8">
+            
+            {/* Tab 1 - Dashboard */}
+            <div className="relative group" style={{ animation: 'floatTab1 7s ease-in-out infinite' }}>
+              <div className="absolute -top-6 left-1/2 -translate-x-1/2 bg-black/90 text-white text-xs font-medium px-4 py-1.5 rounded-t-lg shadow-lg whitespace-nowrap">
+                Dashboard
+              </div>
+              <div className="absolute -inset-1 bg-gradient-to-r from-emerald-500 to-lime-500 rounded-2xl blur opacity-30 group-hover:opacity-50 transition-opacity" />
+              <div className="relative bg-white rounded-2xl p-3 border border-gray-200 shadow-xl">
+                <div className="rounded-xl overflow-hidden w-80 shadow-lg">
+                  <img 
+                    src="/images/model/dashboard.jpg" 
+                    alt="Dashboard" 
+                    className="w-full h-auto object-cover"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Tab 2 - PDV */}
+            <div className="relative group" style={{ animation: 'floatTab2 8s ease-in-out infinite' }}>
+              <div className="absolute -top-6 left-1/2 -translate-x-1/2 bg-black/90 text-white text-xs font-medium px-4 py-1.5 rounded-t-lg shadow-lg whitespace-nowrap">
+                PDV - Ponto de Venda
+              </div>
+              <div className="absolute -inset-1 bg-gradient-to-r from-orange-500 to-amber-500 rounded-2xl blur opacity-30 group-hover:opacity-50 transition-opacity" />
+              <div className="relative bg-white rounded-2xl p-3 border border-gray-200 shadow-xl">
+                <div className="rounded-xl overflow-hidden w-72 shadow-lg">
+                  <img 
+                    src="/images/model/pdv.jpg" 
+                    alt="PDV" 
+                    className="w-full h-auto object-cover"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Tab 3 - Lista de Produtos */}
+            <div className="relative group" style={{ animation: 'floatTab3 7.5s ease-in-out infinite' }}>
+              <div className="absolute -top-6 left-1/2 -translate-x-1/2 bg-black/90 text-white text-xs font-medium px-4 py-1.5 rounded-t-lg shadow-lg whitespace-nowrap">
+                Lista de Produtos
+              </div>
+              <div className="absolute -inset-1 bg-gradient-to-r from-lime-500 to-emerald-500 rounded-2xl blur opacity-30 group-hover:opacity-50 transition-opacity" />
+              <div className="relative bg-white rounded-2xl p-3 border border-gray-200 shadow-xl">
+                <div className="rounded-xl overflow-hidden w-72 shadow-lg">
+                  <img 
+                    src="/images/model/listaprodutos.jpg" 
+                    alt="Lista de Produtos" 
+                    className="w-full h-auto object-cover"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Tab 4 - Relatório de Vendas */}
+            <div className="relative group" style={{ animation: 'floatTab4 8.5s ease-in-out infinite' }}>
+              <div className="absolute -top-6 left-1/2 -translate-x-1/2 bg-black/90 text-white text-xs font-medium px-4 py-1.5 rounded-t-lg shadow-lg whitespace-nowrap">
+                Relatório de Vendas
+              </div>
+              <div className="absolute -inset-1 bg-gradient-to-r from-black to-gray-800 rounded-2xl blur opacity-20 group-hover:opacity-40 transition-opacity" />
+              <div className="relative bg-white rounded-2xl p-3 border border-gray-200 shadow-xl">
+                <div className="rounded-xl overflow-hidden w-72 shadow-lg">
+                  <img 
+                    src="/images/model/relatoriovendas.jpg" 
+                    alt="Relatório de Vendas" 
+                    className="w-full h-auto object-cover"
+                  />
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        {/* Hero Text */}
+        <div className="relative z-10 text-center px-6 -mt-8">
+          <div className="inline-flex items-center gap-2 bg-gradient-to-r from-emerald-500 to-lime-500 text-white text-xs font-semibold px-4 py-2 rounded-full mb-6 shadow-lg shadow-emerald-500/30">
             <Sparkles className="w-3.5 h-3.5" />
             Teste grátis por 7 dias — sem cartão
           </div>
-          <h1 className="text-5xl md:text-7xl font-bold tracking-tight mb-6 leading-tight text-gray-900">
+          <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight mb-6 leading-tight text-gray-900">
             Controle total do seu<br />
-            <span className="text-emerald-500">
+            <span className="bg-gradient-to-r from-emerald-500 to-emerald-600 bg-clip-text text-transparent">
               negócio em um só lugar.
             </span>
           </h1>
-          <p className="text-lg md:text-xl text-gray-500 mb-10 max-w-2xl mx-auto leading-relaxed">
+          <p className="text-lg md:text-xl text-gray-600 mb-10 max-w-2xl mx-auto leading-relaxed">
             PDV, estoque e vendas organizados. Simples assim.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <button
               onClick={() => setStep('form')}
-              className="flex items-center justify-center gap-2 bg-emerald-500 hover:bg-emerald-600 text-white font-semibold px-8 py-4 rounded-full transition-all"
+              className="flex items-center justify-center gap-2 bg-gradient-to-r from-emerald-500 to-lime-500 hover:from-emerald-600 hover:to-lime-600 text-white font-semibold px-8 py-4 rounded-full transition-all hover:scale-105 shadow-xl shadow-emerald-500/30"
             >
               Começar Grátis <ArrowRight className="w-4 h-4" />
             </button>
             <a
               href={DOWNLOAD_URL}
               download
-              className="flex items-center justify-center gap-2 bg-gray-100 hover:bg-gray-200 text-gray-900 font-medium px-8 py-4 rounded-full transition-all"
+              className="flex items-center justify-center gap-2 bg-gray-900 hover:bg-black text-white font-medium px-8 py-4 rounded-full transition-all border border-gray-800"
             >
               <Download className="w-4 h-4" /> Baixar Agora
             </a>
           </div>
         </div>
+
+        {/* Scroll Indicator */}
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
+          <div className="w-6 h-10 rounded-full border-2 border-gray-300 flex justify-center pt-2">
+            <div className="w-1.5 h-3 bg-gray-400 rounded-full animate-pulse" />
+          </div>
+        </div>
+
+        {/* CSS Animations */}
+        <style>{`
+          @keyframes floatTab1 {
+            0%, 100% { transform: translateY(0) rotate(-2deg); }
+            50% { transform: translateY(-20px) rotate(-2deg); }
+          }
+          @keyframes floatTab2 {
+            0%, 100% { transform: translateY(0) rotate(1deg); }
+            50% { transform: translateY(-25px) rotate(1deg); }
+          }
+          @keyframes floatTab3 {
+            0%, 100% { transform: translateY(0) rotate(-1deg); }
+            50% { transform: translateY(-15px) rotate(-1deg); }
+          }
+          @keyframes floatTab4 {
+            0%, 100% { transform: translateY(0) rotate(2deg); }
+            50% { transform: translateY(-22px) rotate(2deg); }
+          }
+          .perspective-1000 {
+            perspective: 1000px;
+          }
+        `}</style>
       </section>
 
       {/* 2. DOR */}
@@ -477,7 +585,7 @@ export default function Landing() {
           </div>
           <div className="grid md:grid-cols-3 gap-6">
             {[
-              { icon: TrendingUp, title: 'Venda mais', desc: 'Identifique seus produtos campeões e foque no que realmente importa.' },
+              { icon: Sparkles, title: 'Venda mais', desc: 'Identifique seus produtos campeões e foque no que realmente importa.' },
               { icon: Clock, title: 'Ganhe tempo', desc: 'Processos automáticos liberam horas da sua semana.' },
               { icon: Shield, title: 'Zero erros', desc: 'Sem mais perdas por falta de controle ou desorganização.' },
             ].map((item, i) => (
@@ -615,7 +723,7 @@ export default function Landing() {
         <div className="max-w-4xl mx-auto text-center">
           <div className="grid grid-cols-3 gap-8">
             <div>
-              <p className="text-4xl md:text-5xl font-bold text-emerald-500 mb-2">+500</p>
+              <p className="text-4xl md:text-5xl font-bold text-emerald-500 mb-2">+100</p>
               <p className="text-gray-500 text-sm">Negócios ativos</p>
             </div>
             <div>
