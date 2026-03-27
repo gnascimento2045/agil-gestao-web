@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import {
   ArrowRight, Check, X, Download, MessageCircle,
   Clock, Shield, Zap, Sparkles, ChevronRight, Menu,
@@ -341,10 +342,8 @@ export default function Landing() {
       <nav className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-xl border-b border-gray-100">
         <div className="max-w-6xl mx-auto px-6 flex items-center justify-between h-16">
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-emerald-500 rounded-lg flex items-center justify-center">
-              <Zap className="w-4 h-4 text-white" />
-            </div>
-            <span className="font-semibold text-lg">Ágil Gestão</span>
+            <img src="/images/icone.png" alt="Hii" className="h-8 w-8 object-contain" />
+            <span className="text-xl font-bold tracking-tight text-gray-900" style={{ fontFamily: "'Poppins', sans-serif" }}>Ágil <span className="bg-gradient-to-r from-emerald-500 to-emerald-600 bg-clip-text text-transparent">Gestão</span></span>
           </div>
           <div className="hidden md:flex items-center gap-8 text-sm text-gray-500">
             <a href="#beneficios" className="hover:text-gray-900 transition-colors">Benefícios</a>
@@ -353,6 +352,12 @@ export default function Landing() {
             <a href={WHATSAPP_URL} target="_blank" rel="noreferrer" className="hover:text-gray-900 transition-colors">Suporte</a>
           </div>
           <div className="flex items-center gap-3">
+            <Link
+              to="/login"
+              className="text-gray-600 hover:text-emerald-600 font-medium px-3 py-2 transition-colors"
+            >
+              Login
+            </Link>
             <button
               onClick={() => setStep('form')}
               className="bg-emerald-500 hover:bg-emerald-600 text-white font-medium px-5 py-2 rounded-full text-sm transition-all"
@@ -370,6 +375,7 @@ export default function Landing() {
             <a href="#como-funciona" className="block hover:text-gray-900" onClick={() => setMenuOpen(false)}>Como Funciona</a>
             <a href="#planos" className="block hover:text-gray-900" onClick={() => setMenuOpen(false)}>Planos</a>
             <a href={WHATSAPP_URL} target="_blank" rel="noreferrer" className="block hover:text-gray-900">Suporte</a>
+            <Link to="/login" className="block hover:text-emerald-600" onClick={() => setMenuOpen(false)}>Login</Link>
           </div>
         )}
       </nav>
@@ -479,7 +485,7 @@ export default function Landing() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <button
               onClick={() => setStep('form')}
-              className="flex items-center justify-center gap-2 bg-gradient-to-r from-emerald-500 to-lime-500 hover:from-emerald-600 hover:to-lime-600 text-white font-semibold px-8 py-4 rounded-full transition-all hover:scale-105 shadow-xl shadow-emerald-500/30"
+              className="flex items-center justify-center gap-2 bg-emerald-500 hover:bg-emerald-600 text-white font-semibold px-8 py-4 rounded-full transition-all hover:scale-105 shadow-xl shadow-emerald-500/30"
             >
               Começar Grátis <ArrowRight className="w-4 h-4" />
             </button>
