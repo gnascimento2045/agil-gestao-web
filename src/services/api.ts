@@ -4,8 +4,33 @@ const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL || 'http://localhost:3333',
 });
 
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem('token');
+  if (token) config.headers.Authorization = `Bearer ${token}`;
+  return config;
+});
+
+api.interceptors.response.use(
+  (res) => res,
+  (error) => {
+    if (error.response?.status === 401) {
+      localStorage.removeItem('token');
+      localStorage.removeItem('cliente');
+      window.location.href = '/login';
+    }
+    return Promise.reject(error);
+  }
+);
+
 export const register = (data: any) => api.post('/clientes/register', data);
-export const login = (data: { email: string; senha: string }) => api.post('/clientes/login', data);
+export const login = (data: { email: string; senha: string }) =>
+  api.post('/clientes/login', data);
+export const getMe = () => api.get('/clientes/me');
+export const alterarSenha = (data: { senhaAtual: string; novaSenha: string }) =>
+  api.put('/clientes/me/senha', data);
+export const renovarPlanoPix = (plano: 'mensal' | 'anual') =>
+  api.post('/clientes/me/renovar', { plano });
+export const criarCheckoutStripe = (plano: 'mensal' | 'anual') =>
+  api.post('/stripe/create-checkout', { plano });
 
 export default api;
-

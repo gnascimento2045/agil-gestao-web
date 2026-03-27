@@ -2,16 +2,13 @@ import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { ChevronRight, Eye, EyeOff } from 'lucide-react';
 import { toast } from 'sonner';
-import api from '../services/api';
+import { login } from '../services/api';
 
 export default function Login() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const [formData, setFormData] = useState({
-    email: '',
-    senha: '',
-  });
+  const [formData, setFormData] = useState({ email: '', senha: '' });
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -21,14 +18,14 @@ export default function Login() {
     e.preventDefault();
     setLoading(true);
     try {
-      const response = await api.post('/clientes/login', formData);
+      const response = await login(formData);
       const { token, cliente } = response.data;
-      
+
       localStorage.setItem('token', token);
       localStorage.setItem('cliente', JSON.stringify(cliente));
-      
+
       toast.success('Login realizado com sucesso!');
-      navigate('/');
+      navigate('/painel');
     } catch (error: any) {
       toast.error(error.response?.data?.erro || 'Erro ao fazer login. Verifique suas credenciais.');
     } finally {
