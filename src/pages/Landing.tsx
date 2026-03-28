@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import {
   ArrowRight, Check, X, Download, MessageCircle,
   Clock, Shield, Zap, Sparkles, ChevronRight, Menu,
@@ -7,6 +7,8 @@ import {
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { register } from '../services/api';
+
+import { maskTelefone, maskCpfCnpj } from '../utils/masks';
 
 const DOWNLOAD_URL = 'https://github.com/gnascimento2045/agil-gestao-desktop/releases/latest/download/agil-gestao-setup.exe';
 const WHATSAPP_URL = 'https://wa.me/5561992724480';
@@ -18,7 +20,8 @@ interface LicencaInfo {
 }
 
 export default function Landing() {
-  const [step, setStep] = useState<'landing' | 'form' | 'success'>('landing');
+  const location = useLocation();
+  const [step, setStep] = useState<'landing' | 'form' | 'success'>(location.state?.from === 'login' ? 'form' : 'landing');
   const [menuOpen, setMenuOpen] = useState(false);
   const [formData, setFormData] = useState({
     nome: '',
@@ -32,7 +35,10 @@ export default function Landing() {
   const [licencaInfo, setLicencaInfo] = useState<LicencaInfo | null>(null);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    let value = e.target.value;
+    if (e.target.name === 'telefone') value = maskTelefone(value);
+    if (e.target.name === 'cpf_cnpj') value = maskCpfCnpj(value);
+    setFormData({ ...formData, [e.target.name]: value });
   };
 
   const handlePlanoChange = (plano: 'gratis' | 'mensal' | 'anual') => {
@@ -317,7 +323,7 @@ export default function Landing() {
               />
               <input
                 name="cpf_cnpj"
-                placeholder="CNPJ"
+                placeholder="CPF ou CNPJ"
                 value={formData.cpf_cnpj}
                 onChange={handleInputChange}
                 className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3.5 text-gray-900 placeholder-gray-400 focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition"
@@ -350,10 +356,10 @@ export default function Landing() {
       {/* NAV */}
       <nav className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-xl border-b border-gray-100">
         <div className="max-w-6xl mx-auto px-6 flex items-center justify-between h-16">
-          <div className="flex items-center gap-2">
+          <Link to="/" className="flex items-center gap-2">
             <img src="/images/icone.png" alt="Hii" className="h-8 w-8 object-contain" />
             <span className="text-xl font-bold tracking-tight text-gray-900" style={{ fontFamily: "'Poppins', sans-serif" }}>Ágil <span className="bg-gradient-to-r from-emerald-500 to-emerald-600 bg-clip-text text-transparent">Gestão</span></span>
-          </div>
+          </Link>
           <div className="hidden md:flex items-center gap-8 text-sm text-gray-500">
             <a href="#beneficios" className="hover:text-gray-900 transition-colors">Benefícios</a>
             <a href="#como-funciona" className="hover:text-gray-900 transition-colors">Como Funciona</a>
@@ -708,18 +714,12 @@ export default function Landing() {
 
       {/* FOOTER */}
       <footer className="border-t border-gray-100 py-10 px-6">
-        <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-6">
+        <div className="max-w-6xl mx-auto flex flex-col items-center justify-center gap-6">
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-emerald-500 rounded-lg flex items-center justify-center">
-              <Zap className="w-4 h-4 text-white" />
-            </div>
-            <span className="font-semibold text-gray-900">Ágil Gestão</span>
+            <img src="/images/icone.png" alt="Ágil Gestão" className="h-8 w-8 object-contain" />
+            <span className="text-xl font-bold tracking-tight text-gray-900">Ágil <span className="bg-gradient-to-r from-emerald-500 to-emerald-600 bg-clip-text text-transparent">Gestão</span></span>
           </div>
-          <p className="text-gray-400 text-sm">© {new Date().getFullYear()}</p>
-          <a href={WHATSAPP_URL} target="_blank" rel="noreferrer"
-            className="flex items-center gap-2 text-emerald-600 hover:text-emerald-700 text-sm font-medium transition-colors">
-            <MessageCircle className="w-4 h-4" /> Suporte
-          </a>
+          <p className="text-gray-400 text-sm text-center">© 2026 ÁGIL GESTAO. Todos os direitos reservados.<br />Desenvolvido por <a href="https://gssystem.vercel.app" target="_blank" rel="noreferrer" className="text-emerald-600 hover:text-emerald-700 font-medium">GS System</a></p>
         </div>
       </footer>
 
@@ -731,3 +731,4 @@ export default function Landing() {
     </div>
   );
 }
+

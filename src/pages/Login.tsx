@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { ChevronRight, Eye, EyeOff } from 'lucide-react';
 import { toast } from 'sonner';
 import { login } from '../services/api';
@@ -90,9 +90,9 @@ export default function Login() {
 
         <p className="text-center text-gray-500 mt-6">
           Não tem uma conta?{' '}
-          <Link to="/" className="text-emerald-600 hover:text-emerald-700 font-medium">
+          <button onClick={() => navigate('/', { state: { from: 'login' } })} className="text-emerald-600 hover:text-emerald-700 font-medium">
             Cadastre-se
-          </Link>
+          </button>
         </p>
       </div>
     </div>
