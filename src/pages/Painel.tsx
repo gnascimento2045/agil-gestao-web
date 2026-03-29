@@ -3,15 +3,13 @@ import { useNavigate, useSearchParams, Link } from 'react-router-dom';
 import {
   LogOut, Key, RefreshCw, Lock, ChevronRight, Copy,
   CheckCircle, AlertCircle, Clock, Crown, CalendarDays,
-  Sparkles, Eye, EyeOff, QrCode, CreditCard, MessageCircle,
+  Sparkles, Eye, EyeOff, CreditCard, MessageCircle,
   Download, ShieldCheck, RotateCcw
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { getMe, alterarSenha, criarCheckoutStripe } from '../services/api';
 
-// ─── Chave PIX e QR (substitua pela sua chave real) ──────────────────────────
-const PIX_CHAVE = import.meta.env.VITE_PIX_CHAVE || 'seu-pix@email.com';
-const PIX_NOME  = import.meta.env.VITE_PIX_NOME  || 'Ágil Gestão';
+// ─── Constantes ──────────────────────────────────────────────────────────────
 const WHATSAPP  = 'https://wa.me/5561992724480';
 const DOWNLOAD_URL = 'https://github.com/gnascimento2045/agil-gestao-desktop/releases/latest/download/agil-gestao-setup.exe';
 
@@ -81,10 +79,7 @@ export default function Painel() {
 
   // Renovar plano
   const [planoSelecionado, setPlanoSelecionado] = useState<PlanoKey>('mensal');
-  const [metodoPagamento, setMetodoPagamento] = useState<'pix' | 'cartao'>('pix');
   const [loadingRenovar, setLoadingRenovar] = useState(false);
-  const [pixMostrado, setPixMostrado] = useState(false);
-  const [loadingPix, setLoadingPix] = useState(false);
 
   // ── Auth guard + carregar dados ──────────────────────────────────────────
   const carregarDados = useCallback(async () => {
@@ -176,22 +171,7 @@ export default function Painel() {
     }
   };
 
-  // ── PIX confirmar (chama /clientes/me/renovar após confirmação manual) ──
-  const handleConfirmarPix = async () => {
-    setLoadingPix(true);
-    try {
-      // Aqui abre o WhatsApp para o cliente enviar comprovante
-      // A ativação real é feita pelo admin ou pelo webhook quando integrado
-      window.open(
-        `${WHATSAPP}?text=Olá! Realizei o pagamento via PIX do plano ${PLANOS[planoSelecionado].label}. Segue o comprovante.`,
-        '_blank'
-      );
-      toast.success('Envie o comprovante pelo WhatsApp para ativar seu plano!');
-      setPixMostrado(false);
-    } finally {
-      setLoadingPix(false);
-    }
-  };
+
 
   // ── Calcular dias acumulados (preview) ──────────────────────────────────
   const diasAcumulados = () => {
@@ -574,122 +554,28 @@ export default function Painel() {
                 </div>
               )}
 
-              {/* Método de pagamento */}
-              <div>
-                <p className="text-sm font-medium text-gray-700 mb-3">Forma de pagamento</p>
-                <div className="grid grid-cols-2 gap-3">
-                  <button
-                    onClick={() => setMetodoPagamento('pix')}
-                    className={`flex flex-col items-center gap-2 p-4 border-2 rounded-xl transition-all ${
-                      metodoPagamento === 'pix'
-                        ? 'border-emerald-500 bg-emerald-50'
-                        : 'border-gray-200 hover:border-gray-300'
-                    }`}
-                  >
-                    <QrCode className={`w-6 h-6 ${metodoPagamento === 'pix' ? 'text-emerald-500' : 'text-gray-400'}`} />
-                    <span className="text-sm font-medium text-gray-700">PIX</span>
-                    <span className="text-xs text-emerald-600 font-medium">Aprovação rápida</span>
-                  </button>
-                  <button
-                    onClick={() => setMetodoPagamento('cartao')}
-                    className={`flex flex-col items-center gap-2 p-4 border-2 rounded-xl transition-all ${
-                      metodoPagamento === 'cartao'
-                        ? 'border-emerald-500 bg-emerald-50'
-                        : 'border-gray-200 hover:border-gray-300'
-                    }`}
-                  >
-                    <CreditCard className={`w-6 h-6 ${metodoPagamento === 'cartao' ? 'text-emerald-500' : 'text-gray-400'}`} />
-                    <span className="text-sm font-medium text-gray-700">Cartão</span>
-                    <span className="text-xs text-gray-400">via Stripe</span>
-                  </button>
-                </div>
-              </div>
-
-              {/* ── PIX ── */}
-              {metodoPagamento === 'pix' && (
-                <div className="space-y-4">
-                  {!pixMostrado ? (
-                    <button
-                      onClick={() => setPixMostrado(true)}
-                      className="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-semibold py-4 rounded-xl transition-all shadow-lg shadow-emerald-500/20 flex items-center justify-center gap-2"
-                    >
-                      <QrCode className="w-5 h-5" />
-                      Ver dados PIX — {PLANOS[planoSelecionado].preco}
-                    </button>
-                  ) : (
-                    <div className="border border-emerald-200 rounded-xl overflow-hidden">
-                      <div className="bg-emerald-50 px-4 py-3 border-b border-emerald-100">
-                        <p className="text-sm font-semibold text-emerald-800">Dados para pagamento PIX</p>
-                        <p className="text-xs text-emerald-600">
-                          {PLANOS[planoSelecionado].label} — {PLANOS[planoSelecionado].preco}
-                        </p>
-                      </div>
-                      <div className="p-4 space-y-3 bg-white">
-                        <div>
-                          <p className="text-xs text-gray-400 mb-1">Chave PIX</p>
-                          <div className="flex items-center gap-2">
-                            <span className="font-mono text-sm text-gray-800 flex-1 bg-gray-50 rounded-lg px-3 py-2 select-all">
-                              {PIX_CHAVE}
-                            </span>
-                            <button
-                              onClick={() => { navigator.clipboard.writeText(PIX_CHAVE); toast.success('Chave PIX copiada!'); }}
-                              className="p-2 text-gray-400 hover:text-emerald-500 hover:bg-emerald-50 rounded-lg transition-colors flex-shrink-0"
-                            >
-                              <Copy className="w-4 h-4" />
-                            </button>
-                          </div>
-                        </div>
-                        <div>
-                          <p className="text-xs text-gray-400 mb-1">Nome do beneficiário</p>
-                          <p className="text-sm font-medium text-gray-800">{PIX_NOME}</p>
-                        </div>
-                        <div>
-                          <p className="text-xs text-gray-400 mb-1">Valor</p>
-                          <p className="text-lg font-bold text-gray-900">{PLANOS[planoSelecionado].preco}</p>
-                        </div>
-                        <div className="bg-amber-50 rounded-lg p-3">
-                          <p className="text-xs text-amber-700">
-                            ⚠️ Após o pagamento, envie o comprovante via WhatsApp para ativarmos seu plano em até 1 hora.
-                          </p>
-                        </div>
-                        <button
-                          onClick={handleConfirmarPix}
-                          disabled={loadingPix}
-                          className="w-full bg-green-500 hover:bg-green-600 disabled:opacity-50 text-white font-semibold py-3 rounded-xl transition-all flex items-center justify-center gap-2"
-                        >
-                          <MessageCircle className="w-4 h-4" />
-                          {loadingPix ? 'Aguarde...' : 'Já paguei — Enviar comprovante'}
-                        </button>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              )}
-
-              {/* ── CARTÃO (Stripe) ── */}
-              {metodoPagamento === 'cartao' && (
-                <div className="space-y-3">
-                  <div className="bg-gray-50 rounded-xl p-4 flex items-start gap-3">
-                    <CreditCard className="w-5 h-5 text-gray-400 flex-shrink-0 mt-0.5" />
-                    <p className="text-sm text-gray-600">
-                      Você será redirecionado ao Stripe para inserir os dados do cartão com segurança.
-                    </p>
-                  </div>
-                  <button
-                    onClick={handleRenovarStripe}
-                    disabled={loadingRenovar}
-                    className="w-full bg-gray-900 hover:bg-black disabled:opacity-50 text-white font-semibold py-4 rounded-xl transition-all flex items-center justify-center gap-2"
-                  >
-                    <CreditCard className="w-5 h-5" />
-                    {loadingRenovar
-                      ? 'Redirecionando...'
-                      : `Pagar com Cartão — ${PLANOS[planoSelecionado].preco}`}
-                  </button>
-                  <p className="text-center text-xs text-gray-400">
-                    Pagamento seguro via <strong>Stripe</strong> · SSL criptografado
+              {/* Pagamento via Stripe */}
+              <div className="space-y-3">
+                <div className="bg-gray-50 rounded-xl p-4 flex items-start gap-3">
+                  <CreditCard className="w-5 h-5 text-gray-400 flex-shrink-0 mt-0.5" />
+                  <p className="text-sm text-gray-600">
+                    Você será redirecionado ao Stripe para escolher a forma de pagamento: <strong>PIX, boleto ou cartão</strong>.
                   </p>
                 </div>
-              )}
+                <button
+                  onClick={handleRenovarStripe}
+                  disabled={loadingRenovar}
+                  className="w-full bg-gray-900 hover:bg-black disabled:opacity-50 text-white font-semibold py-4 rounded-xl transition-all flex items-center justify-center gap-2"
+                >
+                  <CreditCard className="w-5 h-5" />
+                  {loadingRenovar
+                    ? 'Redirecionando...'
+                    : `Renovar Plano — ${PLANOS[planoSelecionado].preco}`}
+                </button>
+                <p className="text-center text-xs text-gray-400">
+                  Pagamento seguro via <strong>Stripe</strong> · SSL criptografado
+                </p>
+              </div>
             </div>
           )}
         </div>
