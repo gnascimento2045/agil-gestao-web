@@ -10,7 +10,7 @@ import { register } from '../services/api';
 
 import { maskTelefone, maskCpfCnpj } from '../utils/masks';
 
-const DOWNLOAD_URL = 'https://github.com/gnascimento2045/agil-gestao-desktop/releases/latest/download/agil-gestao-setup.exe';
+const DOWNLOAD_URL = 'https://pub-269810c1c90047949ec25a9b7b9a5545.r2.dev/releases/agil-gestao-setup.exe';
 const WHATSAPP_URL = 'https://wa.me/5561992724480';
 
 interface LicencaInfo {

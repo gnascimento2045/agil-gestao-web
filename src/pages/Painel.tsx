@@ -11,7 +11,7 @@ import { getMe, alterarSenha, criarCheckoutStripe } from '../services/api';
 
 // ─── Constantes ──────────────────────────────────────────────────────────────
 const WHATSAPP  = 'https://wa.me/5561992724480';
-const DOWNLOAD_URL = 'https://github.com/gnascimento2045/agil-gestao-desktop/releases/latest/download/agil-gestao-setup.exe';
+const DOWNLOAD_URL = 'https://pub-269810c1c90047949ec25a9b7b9a5545.r2.dev/releases/agil-gestao-setup.exe';
 
 const PLANOS = {
   mensal: { label: 'Pro Mensal', preco: 'R$ 29,90', dias: 30, icon: Crown },
