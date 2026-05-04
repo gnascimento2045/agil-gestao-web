@@ -77,7 +77,7 @@ export default function Landing() {
       setLicencaInfo({
         chave: license.chave,
         dataExpiracao: license.dataExpiracao,
-        diasRestantes: license.diasRestantes ?? 7,
+        diasRestantes: license.diasRestantes ?? 90,
       });
       toast.success('Conta criada! Sua licença está ativa.');
       setStep('success');
@@ -95,19 +95,11 @@ export default function Landing() {
   };
 
   const getPlanoLabel = () => {
-    switch (formData.plano) {
-      case 'gratis': return 'Teste Grátis 7 dias';
-      case 'mensal': return 'Plano Pro Mensal';
-      case 'anual': return 'Plano Pro Anual';
-    }
+    return 'Teste Grátis 90 dias';
   };
 
   const getPlanoPreco = () => {
-    switch (formData.plano) {
-      case 'gratis': return 'R$ 0';
-      case 'mensal': return 'R$ 29,90/mês';
-      case 'anual': return 'R$ 15,90/mês';
-    }
+    return 'R$ 0';
   };
 
   // ── SUCCESS ──────────────────────────────────────────────
@@ -151,8 +143,8 @@ export default function Landing() {
           {formData.plano === 'gratis' && (
             <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-4">
               <p className="text-sm text-amber-700 text-center">
-                Teste grátis por 7 dias. Após isso, escolha um plano para continuar.
-              </p>
+                 Teste grátis por 90 dias. Após isso, escolha um plano para continuar.
+               </p>
             </div>
           )}
 
@@ -199,84 +191,20 @@ export default function Landing() {
             <p className="text-sm font-medium text-gray-700 mb-3">Escolha seu plano</p>
             <div className="space-y-3">
               {/* Grátis */}
-              <label
-                className={`flex items-center gap-4 p-4 border-2 rounded-xl cursor-pointer transition-all ${
-                  formData.plano === 'gratis'
-                    ? 'border-emerald-500 bg-emerald-50'
-                    : 'border-gray-200 hover:border-gray-300 bg-white'
-                }`}
-              >
-                <input
-                  type="radio"
-                  name="plano"
-                  value="gratis"
-                  checked={formData.plano === 'gratis'}
-                  onChange={() => handlePlanoChange('gratis')}
-                  className="w-4 h-4 text-emerald-500"
-                />
+              <div className={`flex items-center gap-4 p-4 border-2 rounded-xl bg-emerald-50 border-emerald-500`}>
+                <div className="w-4 h-4 rounded-full bg-emerald-500 flex items-center justify-center">
+                  <Check className="w-2.5 h-2.5 text-white" />
+                </div>
                 <div className="flex-1">
                   <div className="flex items-center gap-2">
                     <Clock className="w-4 h-4 text-emerald-500" />
                     <span className="font-semibold text-gray-900">Teste Grátis</span>
-                    <span className="text-xs bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full">7 dias</span>
+                    <span className="text-xs bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full">90 dias</span>
                   </div>
                   <p className="text-sm text-gray-500 mt-1">Sem cartão de crédito</p>
                 </div>
                 <span className="font-bold text-gray-900">R$ 0</span>
-              </label>
-
-              {/* Mensal */}
-              <label
-                className={`flex items-center gap-4 p-4 border-2 rounded-xl cursor-pointer transition-all ${
-                  formData.plano === 'mensal'
-                    ? 'border-emerald-500 bg-emerald-50'
-                    : 'border-gray-200 hover:border-gray-300 bg-white'
-                }`}
-              >
-                <input
-                  type="radio"
-                  name="plano"
-                  value="mensal"
-                  checked={formData.plano === 'mensal'}
-                  onChange={() => handlePlanoChange('mensal')}
-                  className="w-4 h-4 text-emerald-500"
-                />
-                <div className="flex-1">
-                  <div className="flex items-center gap-2">
-                    <Crown className="w-4 h-4 text-amber-500" />
-                    <span className="font-semibold text-gray-900">Pro Mensal</span>
-                  </div>
-                  <p className="text-sm text-gray-500 mt-1">Acesso completo + suporte</p>
-                </div>
-                <span className="font-bold text-gray-900">R$ 29,90<span className="text-sm font-normal text-gray-500">/mês</span></span>
-              </label>
-
-              {/* Anual */}
-              <label
-                className={`flex items-center gap-4 p-4 border-2 rounded-xl cursor-pointer transition-all ${
-                  formData.plano === 'anual'
-                    ? 'border-emerald-500 bg-emerald-50'
-                    : 'border-gray-200 hover:border-gray-300 bg-white'
-                }`}
-              >
-                <input
-                  type="radio"
-                  name="plano"
-                  value="anual"
-                  checked={formData.plano === 'anual'}
-                  onChange={() => handlePlanoChange('anual')}
-                  className="w-4 h-4 text-emerald-500"
-                />
-                <div className="flex-1">
-                  <div className="flex items-center gap-2">
-                    <CalendarDays className="w-4 h-4 text-emerald-500" />
-                    <span className="font-semibold text-gray-900">Pro Anual</span>
-                    <span className="text-xs bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full">47% OFF</span>
-                  </div>
-                  <p className="text-sm text-gray-500 mt-1">Economia de R$ 168/ano</p>
-                </div>
-                <span className="font-bold text-gray-900">R$ 15,90<span className="text-sm font-normal text-gray-500">/mês</span></span>
-              </label>
+              </div>
             </div>
           </div>
 
@@ -448,7 +376,7 @@ export default function Landing() {
         <div className="relative z-10 text-center px-6 -mt-8">
           <div className="inline-flex items-center gap-2 bg-gradient-to-r from-emerald-500 to-lime-500 text-white text-xs font-semibold px-4 py-2 rounded-full mb-6 shadow-lg shadow-emerald-500/30">
             <Sparkles className="w-3.5 h-3.5" />
-            Teste grátis por 7 dias — sem cartão
+            Teste grátis por 90 dias — sem cartão
           </div>
           <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight mb-6 leading-tight text-gray-900">
             Controle total do seu<br />
@@ -576,7 +504,7 @@ export default function Landing() {
           <div className="space-y-6">
             {[
               { step: '01', title: 'Baixe o app', desc: 'Instale em qualquer computador. Leva 2 minutos.' },
-              { step: '02', title: 'Escolha seu plano', desc: 'Grátis 7 dias, Pro Mensal ou Anual com 47% OFF. Você decide.' },
+              { step: '02', title: 'Escolha seu plano', desc: 'Grátis 90 dias. Teste tudo gratuitamente.' },
               { step: '03', title: 'Comece a vender', desc: 'Pronto. Seu controle completo está funcionando.' },
             ].map((item, i) => (
               <div key={i} className="flex items-center gap-6 p-6 border border-gray-200 rounded-2xl bg-white">
@@ -596,7 +524,7 @@ export default function Landing() {
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-16">
             <p className="text-gray-400 text-sm uppercase tracking-wider mb-2">Escolha seu plano</p>
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900">Comece grátis ou vá Pro</h2>
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900">Teste tudo grátis</h2>
             <p className="text-gray-500 mt-4">Cancele quando quiser. Sem taxas escondidas.</p>
           </div>
           <div className="grid md:grid-cols-3 gap-6">
@@ -607,7 +535,7 @@ export default function Landing() {
               </div>
               <div className="mb-6">
                 <span className="text-4xl font-bold text-gray-900">R$ 0</span>
-                <span className="text-gray-500">/7 dias</span>
+                <span className="text-gray-500">/90 dias</span>
               </div>
               <ul className="space-y-3 mb-8">
                 {['PDV completo', 'Produtos ilimitados', 'Relatórios básicos', 'Suporte por email'].map(f => (
@@ -621,51 +549,49 @@ export default function Landing() {
                 Começar Grátis
               </button>
             </div>
-            <div className="p-8 border-2 border-emerald-500 rounded-3xl bg-white relative">
-              <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-emerald-500 text-white text-xs font-bold px-4 py-1 rounded-full">MAIS POPULAR</div>
-              <div className="flex items-center gap-2 mb-4">
-                <Crown className="w-5 h-5 text-amber-500" />
-                <span className="text-amber-600 font-semibold">Pro Mensal</span>
-              </div>
-              <div className="mb-6">
-                <span className="text-4xl font-bold text-gray-900">R$ 29,90</span>
-                <span className="text-gray-500">/mês</span>
-              </div>
-              <ul className="space-y-3 mb-8">
-                {['Tudo do plano grátis', 'Produtos ilimitados', 'Relatórios avançados', 'Suporte prioritário', 'Painel de controle'].map(f => (
-                  <li key={f} className="flex items-center gap-2 text-sm text-gray-600">
-                    <Check className="w-4 h-4 text-emerald-500" /> {f}
-                  </li>
-                ))}
-              </ul>
-              <button onClick={() => { setFormData({ ...formData, plano: 'mensal' }); setStep('form'); }}
-                className="w-full py-3 bg-emerald-500 text-white font-semibold rounded-xl hover:bg-emerald-600 transition-all">
-                Assinar Pro
-              </button>
-            </div>
-            <div className="p-8 border border-gray-200 rounded-3xl bg-white">
-              <div className="flex items-center gap-2 mb-4">
-                <CalendarDays className="w-5 h-5 text-emerald-500" />
-                <span className="text-emerald-600 font-semibold">Pro Anual</span>
-                <span className="text-xs bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full">47% OFF</span>
-              </div>
-              <div className="mb-6">
-                <span className="text-4xl font-bold text-gray-900">R$ 15,90</span>
-                <span className="text-gray-500">/mês</span>
-                <p className="text-sm text-gray-400 mt-1">Cobrado anualmente (R$ 190,80)</p>
-              </div>
-              <ul className="space-y-3 mb-8">
-                {['Tudo do plano mensal', 'Economia de R$ 168/ano', 'Suporte VIP', 'Atualizações prioritárias'].map(f => (
-                  <li key={f} className="flex items-center gap-2 text-sm text-gray-600">
-                    <Check className="w-4 h-4 text-emerald-500" /> {f}
-                  </li>
-                ))}
-              </ul>
-              <button onClick={() => { setFormData({ ...formData, plano: 'anual' }); setStep('form'); }}
-                className="w-full py-3 border-2 border-gray-300 text-gray-700 font-semibold rounded-xl hover:border-emerald-500 hover:text-emerald-600 transition-all">
-                Assinar Anual
-              </button>
-            </div>
+              <div className="p-8 border-2 border-gray-200 rounded-3xl bg-white relative opacity-60">
+               <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-gray-500 text-white text-xs font-bold px-4 py-1 rounded-full">EM BREVE</div>
+               <div className="flex items-center gap-2 mb-4">
+                 <Crown className="w-5 h-5 text-gray-400" />
+                 <span className="text-gray-400 font-semibold">Pro Mensal</span>
+               </div>
+               <div className="mb-6">
+                 <span className="text-4xl font-bold text-gray-400">R$ 29,90</span>
+                 <span className="text-gray-400">/mês</span>
+               </div>
+               <ul className="space-y-3 mb-8">
+                 {['Tudo do plano grátis', 'Produtos ilimitados', 'Relatórios avançados', 'Suporte prioritário', 'Painel de controle'].map(f => (
+                   <li key={f} className="flex items-center gap-2 text-sm text-gray-400">
+                     <Check className="w-4 h-4 text-gray-300" /> {f}
+                   </li>
+                 ))}
+               </ul>
+               <button disabled className="w-full py-3 bg-gray-300 text-white font-semibold rounded-xl cursor-not-allowed">
+                 EM BREVE
+               </button>
+             </div>
+              <div className="p-8 border border-gray-200 rounded-3xl bg-white opacity-60">
+               <div className="flex items-center gap-2 mb-4">
+                 <CalendarDays className="w-5 h-5 text-gray-400" />
+                 <span className="text-gray-400 font-semibold">Pro Anual</span>
+                 <span className="text-xs bg-gray-100 text-gray-500 px-2 py-0.5 rounded-full">EM BREVE</span>
+               </div>
+               <div className="mb-6">
+                 <span className="text-4xl font-bold text-gray-400">R$ 15,90</span>
+                 <span className="text-gray-400">/mês</span>
+                 <p className="text-sm text-gray-400 mt-1">Cobrado anualmente (R$ 190,80)</p>
+               </div>
+               <ul className="space-y-3 mb-8">
+                 {['Tudo do plano mensal', 'Economia de R$ 168/ano', 'Suporte VIP', 'Atualizações prioritárias'].map(f => (
+                   <li key={f} className="flex items-center gap-2 text-sm text-gray-400">
+                     <Check className="w-4 h-4 text-gray-300" /> {f}
+                   </li>
+                 ))}
+               </ul>
+               <button disabled className="w-full py-3 border-2 border-gray-300 text-gray-400 font-semibold rounded-xl cursor-not-allowed">
+                 EM BREVE
+               </button>
+             </div>
           </div>
         </div>
       </section>
@@ -675,12 +601,12 @@ export default function Landing() {
         <div className="max-w-4xl mx-auto text-center">
           <div className="grid grid-cols-3 gap-8">
             <div>
-              <p className="text-4xl md:text-5xl font-bold text-emerald-500 mb-2">+100</p>
-              <p className="text-gray-500 text-sm">Negócios ativos</p>
+              <p className="text-4xl md:text-5xl font-bold text-emerald-500 mb-2">+5</p>
+              <p className="text-gray-500 text-sm">Negócios ativos em uso</p>
             </div>
             <div>
-              <p className="text-4xl md:text-5xl font-bold text-emerald-500 mb-2">7 dias</p>
-              <p className="text-gray-500 text-sm">Para testar tudo</p>
+              <p className="text-4xl md:text-5xl font-bold text-emerald-500 mb-2">90 dias</p>
+               <p className="text-gray-500 text-sm">Para testar tudo</p>
             </div>
             <div>
               <p className="text-4xl md:text-5xl font-bold text-emerald-500 mb-2">100%</p>
