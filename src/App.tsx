@@ -4,6 +4,8 @@ import Login from './pages/Login.tsx';
 import Painel from './pages/Painel.tsx';
 import { Toaster } from 'sonner';
 
+// TESTE 
+
 export default function App() {
   return (
     <>
