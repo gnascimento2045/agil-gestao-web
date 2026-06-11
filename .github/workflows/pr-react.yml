@@ -2,13 +2,14 @@ name: React to PR on Discord
 
 on:
   pull_request:
-    types: [opened]
+    types: [closed]
 
 jobs:
   react:
     runs-on: ubuntu-latest
     steps:
       - name: Find and react to PR message
+        if: github.event.pull_request.merged == true
         env:
           DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
           CHANNEL_ID: ${{ secrets.DISCORD_CHANNEL_ID }}
