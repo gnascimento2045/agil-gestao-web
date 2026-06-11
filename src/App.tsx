@@ -4,7 +4,7 @@ import Login from './pages/Login.tsx';
 import Painel from './pages/Painel.tsx';
 import { Toaster } from 'sonner';
 
-
+// novo teste de commit bot
 
 export default function App() {
   return (
