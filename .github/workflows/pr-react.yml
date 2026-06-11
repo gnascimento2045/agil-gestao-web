@@ -2,10 +2,11 @@ name: React to PR on Discord
 
 on:
   pull_request:
-    types: [opened]
+    types: [closed]
 
 jobs:
   react:
+    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     steps:
       - name: Find and react to PR message
@@ -17,16 +18,13 @@ jobs:
           MESSAGES=$(curl -s \
             -H "Authorization: Bot $DISCORD_BOT_TOKEN" \
             "https://discord.com/api/v10/channels/$CHANNEL_ID/messages?limit=50")
-
           MESSAGE_ID=$(echo "$MESSAGES" | jq -r \
             --arg url "$PR_URL" \
             '.[] | select(.content | contains($url)) | .id' | head -1)
-
           if [ -z "$MESSAGE_ID" ]; then
             echo "Mensagem não encontrada no canal"
             exit 0
           fi
-
           curl -X PUT \
             -H "Authorization: Bot $DISCORD_BOT_TOKEN" \
             "https://discord.com/api/v10/channels/$CHANNEL_ID/messages/$MESSAGE_ID/reactions/%F0%9F%9A%80/@me"
