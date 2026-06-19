@@ -9,6 +9,7 @@ import { toast } from 'sonner';
 import { register } from '../services/api';
 
 import { maskTelefone, maskCpfCnpj } from '../utils/masks';
+import { buscarCep } from '../utils/viacep';
 
 const DOWNLOAD_URL = 'https://pub-269810c1c90047949ec25a9b7b9a5545.r2.dev/releases/agil-gestao-setup.exe';
 const WHATSAPP_URL = 'https://wa.me/5561992724480';
@@ -29,6 +30,12 @@ export default function Landing() {
     senha: '',
     telefone: '',
     cpf_cnpj: '',
+    cep: '',
+    cidade: '',
+    endereco: '',
+    numero: '',
+    bairro: '',
+    complemento: '',
     plano: 'gratis' as 'gratis' | 'mensal' | 'anual',
   });
   const [loading, setLoading] = useState(false);
@@ -38,6 +45,22 @@ export default function Landing() {
     let value = e.target.value;
     if (e.target.name === 'telefone') value = maskTelefone(value);
     if (e.target.name === 'cpf_cnpj') value = maskCpfCnpj(value);
+    if (e.target.name === 'cep') {
+      value = value.replace(/\D/g, '').slice(0, 8);
+      if (value.length === 8) {
+        buscarCep(value).then(d => {
+          if (d) {
+            setFormData(prev => ({
+              ...prev,
+              cep: value,
+              cidade: d.cidade || prev.cidade,
+              endereco: d.endereco || prev.endereco,
+              bairro: d.bairro || prev.bairro,
+            }));
+          }
+        });
+      }
+    }
     setFormData({ ...formData, [e.target.name]: value });
   };
 
@@ -56,6 +79,12 @@ export default function Landing() {
         plano: formData.plano,
         telefone: formData.telefone || undefined,
         cpf_cnpj: formData.cpf_cnpj || undefined,
+        cep: formData.cep || undefined,
+        cidade: formData.cidade || undefined,
+        endereco: formData.endereco || undefined,
+        numero: formData.numero || undefined,
+        bairro: formData.bairro || undefined,
+        complemento: formData.complemento || undefined,
       };
       const response = await register(data);
       const { checkout, checkoutUrl, license, token, user } = response.data;
@@ -299,9 +328,66 @@ export default function Landing() {
               />
             </div>
 
+            {/* Endereço (obrigatório para todos os planos) */}
+            <div>
+              <input
+                name="cep"
+                placeholder="CEP *"
+                value={formData.cep}
+                onChange={handleInputChange}
+                required
+                className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3.5 text-gray-900 placeholder-gray-400 focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition"
+              />
+            </div>
+            <div>
+              <input
+                name="endereco"
+                placeholder="Endereço *"
+                value={formData.endereco}
+                onChange={handleInputChange}
+                required
+                className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3.5 text-gray-900 placeholder-gray-400 focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition"
+              />
+            </div>
+            <div className="grid grid-cols-3 gap-4">
+              <input
+                name="cidade"
+                placeholder="Cidade *"
+                value={formData.cidade}
+                onChange={handleInputChange}
+                required
+                className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3.5 text-gray-900 placeholder-gray-400 focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition"
+              />
+              <input
+                name="numero"
+                placeholder="Número *"
+                value={formData.numero}
+                onChange={handleInputChange}
+                required
+                className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3.5 text-gray-900 placeholder-gray-400 focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition"
+              />
+              <input
+                name="bairro"
+                placeholder="Bairro *"
+                value={formData.bairro}
+                onChange={handleInputChange}
+                required
+                className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3.5 text-gray-900 placeholder-gray-400 focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition"
+              />
+            </div>
+            <div>
+              <input
+                name="complemento"
+                placeholder="Complemento"
+                value={formData.complemento}
+                onChange={handleInputChange}
+                className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3.5 text-gray-900 placeholder-gray-400 focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition"
+              />
+            </div>
+
             <button
               type="submit"
-              disabled={loading}
+              disabled={!(formData.nome && formData.email && formData.senha && formData.cep && formData.cidade && formData.endereco && formData.numero && formData.bairro) || loading}
               className="w-full bg-emerald-500 hover:bg-emerald-600 disabled:opacity-50 text-white font-semibold py-4 rounded-xl transition-all flex items-center justify-center gap-2 mt-6 shadow-lg shadow-emerald-500/20"
             >
               {loading ? 'Criando...' : (
