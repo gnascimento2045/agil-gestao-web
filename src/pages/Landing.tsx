@@ -95,11 +95,21 @@ export default function Landing() {
   };
 
   const getPlanoLabel = () => {
-    return 'Teste Grátis 30 dias';
+    const labels: Record<string, string> = {
+      gratis: 'Teste Grátis 30 dias',
+      mensal: 'Pro Mensal',
+      anual: 'Pro Anual',
+    };
+    return labels[formData.plano] || 'Teste Grátis 30 dias';
   };
 
   const getPlanoPreco = () => {
-    return 'R$ 0';
+    const precos: Record<string, string> = {
+      gratis: 'R$ 0',
+      mensal: 'R$ 29,90/mês',
+      anual: 'R$ 15,90/mês',
+    };
+    return precos[formData.plano] || 'R$ 0';
   };
 
   // ── SUCCESS ──────────────────────────────────────────────
@@ -190,21 +200,52 @@ export default function Landing() {
           <div className="mb-8">
             <p className="text-sm font-medium text-gray-700 mb-3">Escolha seu plano</p>
             <div className="space-y-3">
-              {/* Grátis */}
-              <div className={`flex items-center gap-4 p-4 border-2 rounded-xl bg-emerald-50 border-emerald-500`}>
-                <div className="w-4 h-4 rounded-full bg-emerald-500 flex items-center justify-center">
-                  <Check className="w-2.5 h-2.5 text-white" />
-                </div>
-                <div className="flex-1">
-                  <div className="flex items-center gap-2">
-                    <Clock className="w-4 h-4 text-emerald-500" />
-                    <span className="font-semibold text-gray-900">Teste Grátis</span>
-                    <span className="text-xs bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full">30 dias</span>
-                  </div>
-                  <p className="text-sm text-gray-500 mt-1">Sem cartão de crédito</p>
-                </div>
-                <span className="font-bold text-gray-900">R$ 0</span>
-              </div>
+              {[
+                { key: 'gratis' as const, icon: Clock, label: 'Teste Grátis', badge: '30 dias', desc: 'Sem cartão de crédito', preco: 'R$ 0' },
+                { key: 'mensal' as const, icon: Crown, label: 'Pro Mensal', badge: null, desc: 'Tudo do gratís + relatórios avançados', preco: 'R$ 29,90' },
+                { key: 'anual' as const, icon: CalendarDays, label: 'Pro Anual', badge: 'ECONOMIZE 47%', desc: 'Cobrado anualmente (R$ 190,80)', preco: 'R$ 15,90/mês' },
+              ].map(({ key, icon: Icon, label, badge, desc, preco }) => {
+                const selected = formData.plano === key;
+                return (
+                  <label
+                    key={key}
+                    className={`flex items-center gap-4 p-4 border-2 rounded-xl cursor-pointer transition-all ${
+                      selected
+                        ? 'bg-emerald-50 border-emerald-500'
+                        : 'bg-white border-gray-200 hover:border-gray-300'
+                    }`}
+                  >
+                    <input
+                      type="radio"
+                      name="plano"
+                      value={key}
+                      checked={selected}
+                      onChange={() => setFormData({ ...formData, plano: key })}
+                      className="sr-only"
+                    />
+                    <div className={`w-4 h-4 rounded-full flex items-center justify-center ${
+                      selected ? 'bg-emerald-500' : 'border-2 border-gray-300'
+                    }`}>
+                      {selected && <Check className="w-2.5 h-2.5 text-white" />}
+                    </div>
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2">
+                        <Icon className={`w-4 h-4 ${selected ? 'text-emerald-500' : 'text-gray-400'}`} />
+                        <span className="font-semibold text-gray-900">{label}</span>
+                        {badge && (
+                          <span className={`text-xs px-2 py-0.5 rounded-full ${
+                            key === 'anual'
+                              ? 'bg-amber-100 text-amber-700'
+                              : 'bg-emerald-100 text-emerald-700'
+                          }`}>{badge}</span>
+                        )}
+                      </div>
+                      <p className="text-sm text-gray-500 mt-1">{desc}</p>
+                    </div>
+                    <span className="font-bold text-gray-900">{preco}</span>
+                  </label>
+                );
+              })}
             </div>
           </div>
 
