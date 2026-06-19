@@ -86,6 +86,16 @@ export default function Login() {
           >
             {loading ? 'Entrando...' : 'Entrar'}
           </button>
+
+          <p className="text-right mt-2">
+            <button
+              type="button"
+              onClick={() => navigate('/esqueci-senha')}
+              className="text-sm text-emerald-600 hover:text-emerald-700 font-medium"
+            >
+              Esqueceu sua senha?
+            </button>
+          </p>
         </form>
 
         <p className="text-center text-gray-500 mt-6">

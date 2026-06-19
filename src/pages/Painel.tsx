@@ -7,7 +7,7 @@ import {
   Download, ShieldCheck, RotateCcw
 } from 'lucide-react';
 import { toast } from 'sonner';
-import { getMe, alterarSenha, criarCheckoutStripe } from '../services/api';
+import { getMe, alterarSenha, criarCheckoutAsaas } from '../services/api';
 
 // ─── Constantes ──────────────────────────────────────────────────────────────
 const WHATSAPP  = 'https://wa.me/5561992724480';
@@ -158,11 +158,11 @@ export default function Painel() {
     }
   };
 
-  // ── Renovar via Stripe ───────────────────────────────────────────────────
-  const handleRenovarStripe = async () => {
+  // ── Renovar via Asaas ───────────────────────────────────────────────────
+  const handleRenovarAsaas = async () => {
     setLoadingRenovar(true);
     try {
-      const { data } = await criarCheckoutStripe(planoSelecionado);
+      const { data } = await criarCheckoutAsaas(planoSelecionado);
       window.location.href = data.url;
     } catch (err: any) {
       toast.error(err.response?.data?.erro || 'Erro ao iniciar pagamento.');
@@ -554,16 +554,16 @@ export default function Painel() {
                 </div>
               )}
 
-              {/* Pagamento via Stripe */}
+              {/* Pagamento via Asaas */}
               <div className="space-y-3">
                 <div className="bg-gray-50 rounded-xl p-4 flex items-start gap-3">
                   <CreditCard className="w-5 h-5 text-gray-400 flex-shrink-0 mt-0.5" />
                   <p className="text-sm text-gray-600">
-                    Você será redirecionado ao Stripe para escolher a forma de pagamento: <strong>PIX, boleto ou cartão</strong>.
+                    Você será redirecionado ao Asaas para escolher a forma de pagamento: <strong>PIX ou cartão de crédito</strong>.
                   </p>
                 </div>
                 <button
-                  onClick={handleRenovarStripe}
+                  onClick={handleRenovarAsaas}
                   disabled={loadingRenovar}
                   className="w-full bg-gray-900 hover:bg-black disabled:opacity-50 text-white font-semibold py-4 rounded-xl transition-all flex items-center justify-center gap-2"
                 >
@@ -573,7 +573,7 @@ export default function Painel() {
                     : `Renovar Plano — ${PLANOS[planoSelecionado].preco}`}
                 </button>
                 <p className="text-center text-xs text-gray-400">
-                  Pagamento seguro via <strong>Stripe</strong> · SSL criptografado
+                  Pagamento seguro via <strong>Asaas</strong> · SSL criptografado
                 </p>
               </div>
             </div>

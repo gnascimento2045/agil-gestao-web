@@ -66,7 +66,7 @@ export default function Landing() {
         localStorage.setItem('cliente', JSON.stringify(user));
       }
 
-      // Plano pago: redireciona para o checkout do Stripe
+      // Plano pago: redireciona para o checkout do Asaas
       if (checkout && checkoutUrl) {
         toast.success('Conta criada! Redirecionando para o pagamento...');
         window.location.href = checkoutUrl;

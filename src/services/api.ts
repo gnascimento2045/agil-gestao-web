@@ -30,7 +30,11 @@ export const alterarSenha = (data: { senhaAtual: string; novaSenha: string }) =>
   api.put('/clientes/me/senha', data);
 export const renovarPlanoPix = (plano: 'mensal' | 'anual') =>
   api.post('/clientes/me/renovar', { plano });
-export const criarCheckoutStripe = (plano: 'mensal' | 'anual') =>
-  api.post('/stripe/create-checkout', { plano });
+export const criarCheckoutAsaas = (plano: 'mensal' | 'anual') =>
+  api.post('/asaas/create-checkout', { plano });
+export const esqueciSenha = (email: string) =>
+  api.post('/clientes/esqueci-senha', { email });
+export const redefinirSenha = (token: string, novaSenha: string) =>
+  api.post('/clientes/redefinir-senha', { token, novaSenha });
 
 export default api;
