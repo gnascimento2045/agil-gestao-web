@@ -28,6 +28,10 @@ export const login = (data: { email: string; senha: string }) =>
 export const getMe = () => api.get('/clientes/me');
 export const alterarSenha = (data: { senhaAtual: string; novaSenha: string }) =>
   api.put('/clientes/me/senha', data);
+export const atualizarEndereco = (data: {
+  cep?: string; cidade?: string; endereco?: string;
+  numero?: string; bairro?: string; complemento?: string;
+}) => api.put('/clientes/me/endereco', data);
 export const renovarPlanoPix = (plano: 'mensal' | 'anual') =>
   api.post('/clientes/me/renovar', { plano });
 export const criarCheckoutAsaas = (plano: 'mensal' | 'anual') =>
