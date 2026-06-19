@@ -320,7 +320,7 @@ export default function Painel() {
                   </div>
                   <div className="text-left">
                     <p className="font-medium text-gray-900">Renovar / Contratar Plano</p>
-                    <p className="text-xs text-gray-400">Mensal ou Anual com 47% OFF</p>
+                    <p className="text-xs text-gray-400">Planos pagos em breve</p>
                   </div>
                 </div>
                 <ChevronRight className="w-4 h-4 text-gray-300 group-hover:text-emerald-500 transition-colors" />
@@ -494,8 +494,9 @@ export default function Painel() {
                 </p>
               </div>
 
-              {/* Seleção de plano */}
-              <div className="space-y-3">
+{/* COMENTADO: planos pagos desativados até API de pagamento ser arrumada */}
+            {false && (
+              <><div className="space-y-3">
                 {(Object.keys(PLANOS) as PlanoKey[]).map((key) => {
                   const p = PLANOS[key];
                   const Icon = p.icon;
@@ -535,7 +536,6 @@ export default function Painel() {
                 })}
               </div>
 
-              {/* Preview de acúmulo */}
               {licenca && licenca.diasRestantes > 0 && (
                 <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-4 flex items-start gap-3">
                   <CheckCircle className="w-5 h-5 text-emerald-500 flex-shrink-0 mt-0.5" />
@@ -554,7 +554,6 @@ export default function Painel() {
                 </div>
               )}
 
-              {/* Pagamento via Asaas */}
               <div className="space-y-3">
                 <div className="bg-gray-50 rounded-xl p-4 flex items-start gap-3">
                   <CreditCard className="w-5 h-5 text-gray-400 flex-shrink-0 mt-0.5" />
@@ -575,7 +574,8 @@ export default function Painel() {
                 <p className="text-center text-xs text-gray-400">
                   Pagamento seguro via <strong>Asaas</strong> · SSL criptografado
                 </p>
-              </div>
+              </div></>
+            )}
             </div>
           )}
         </div>

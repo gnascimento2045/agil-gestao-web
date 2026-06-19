@@ -95,7 +95,7 @@ export default function Landing() {
   };
 
   const getPlanoLabel = () => {
-    return 'Teste Grátis 90 dias';
+    return 'Teste Grátis 30 dias';
   };
 
   const getPlanoPreco = () => {
@@ -143,7 +143,7 @@ export default function Landing() {
           {formData.plano === 'gratis' && (
             <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-4">
               <p className="text-sm text-amber-700 text-center">
-                 Teste grátis por 90 dias. Após isso, escolha um plano para continuar.
+                 Teste grátis por 30 dias. Após isso, escolha um plano para continuar.
                </p>
             </div>
           )}
@@ -199,7 +199,7 @@ export default function Landing() {
                   <div className="flex items-center gap-2">
                     <Clock className="w-4 h-4 text-emerald-500" />
                     <span className="font-semibold text-gray-900">Teste Grátis</span>
-                    <span className="text-xs bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full">90 dias</span>
+                    <span className="text-xs bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full">30 dias</span>
                   </div>
                   <p className="text-sm text-gray-500 mt-1">Sem cartão de crédito</p>
                 </div>
@@ -376,7 +376,7 @@ export default function Landing() {
         <div className="relative z-10 text-center px-6 -mt-8">
           <div className="inline-flex items-center gap-2 bg-gradient-to-r from-emerald-500 to-lime-500 text-white text-xs font-semibold px-4 py-2 rounded-full mb-6 shadow-lg shadow-emerald-500/30">
             <Sparkles className="w-3.5 h-3.5" />
-            Teste grátis por 90 dias — sem cartão
+            Teste grátis por 30 dias — sem cartão
           </div>
           <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight mb-6 leading-tight text-gray-900">
             Controle total do seu<br />
@@ -504,7 +504,7 @@ export default function Landing() {
           <div className="space-y-6">
             {[
               { step: '01', title: 'Baixe o app', desc: 'Instale em qualquer computador. Leva 2 minutos.' },
-              { step: '02', title: 'Escolha seu plano', desc: 'Grátis 90 dias. Teste tudo gratuitamente.' },
+              { step: '02', title: 'Escolha seu plano', desc: 'Grátis 30 dias. Teste tudo gratuitamente.' },
               { step: '03', title: 'Comece a vender', desc: 'Pronto. Seu controle completo está funcionando.' },
             ].map((item, i) => (
               <div key={i} className="flex items-center gap-6 p-6 border border-gray-200 rounded-2xl bg-white">
@@ -527,7 +527,7 @@ export default function Landing() {
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900">Teste tudo grátis</h2>
             <p className="text-gray-500 mt-4">Cancele quando quiser. Sem taxas escondidas.</p>
           </div>
-          <div className="grid md:grid-cols-3 gap-6">
+          <div className="max-w-sm mx-auto">
             <div className="p-8 border border-gray-200 rounded-3xl bg-white">
               <div className="flex items-center gap-2 mb-4">
                 <Clock className="w-5 h-5 text-emerald-500" />
@@ -535,7 +535,7 @@ export default function Landing() {
               </div>
               <div className="mb-6">
                 <span className="text-4xl font-bold text-gray-900">R$ 0</span>
-                <span className="text-gray-500">/90 dias</span>
+                <span className="text-gray-500">/30 dias</span>
               </div>
               <ul className="space-y-3 mb-8">
                 {['PDV completo', 'Produtos ilimitados', 'Relatórios básicos', 'Suporte por email'].map(f => (
@@ -549,7 +549,8 @@ export default function Landing() {
                 Começar Grátis
               </button>
             </div>
-              <div className="p-8 border-2 border-gray-200 rounded-3xl bg-white relative opacity-60">
+{/* COMENTADO: planos pagos desativados até API de pagamento ser arrumada */}
+            {false && (<div className="p-8 border-2 border-gray-200 rounded-3xl bg-white relative opacity-60">
                <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-gray-500 text-white text-xs font-bold px-4 py-1 rounded-full">EM BREVE</div>
                <div className="flex items-center gap-2 mb-4">
                  <Crown className="w-5 h-5 text-gray-400" />
@@ -569,8 +570,8 @@ export default function Landing() {
                <button disabled className="w-full py-3 bg-gray-300 text-white font-semibold rounded-xl cursor-not-allowed">
                  EM BREVE
                </button>
-             </div>
-              <div className="p-8 border border-gray-200 rounded-3xl bg-white opacity-60">
+             </div>)}
+            {false && (<div className="p-8 border border-gray-200 rounded-3xl bg-white opacity-60">
                <div className="flex items-center gap-2 mb-4">
                  <CalendarDays className="w-5 h-5 text-gray-400" />
                  <span className="text-gray-400 font-semibold">Pro Anual</span>
@@ -591,12 +592,12 @@ export default function Landing() {
                <button disabled className="w-full py-3 border-2 border-gray-300 text-gray-400 font-semibold rounded-xl cursor-not-allowed">
                  EM BREVE
                </button>
-             </div>
-          </div>
-        </div>
-      </section>
+             </div>)}
+         </div>
+           </div>
+       </section>
 
-      {/* 6. AUTORIDADE */}
+       {/* 6. AUTORIDADE */}
       <section className="py-20 px-6">
         <div className="max-w-4xl mx-auto text-center">
           <div className="grid grid-cols-3 gap-8">
@@ -605,7 +606,7 @@ export default function Landing() {
               <p className="text-gray-500 text-sm">Negócios ativos em uso</p>
             </div>
             <div>
-              <p className="text-4xl md:text-5xl font-bold text-emerald-500 mb-2">90 dias</p>
+              <p className="text-4xl md:text-5xl font-bold text-emerald-500 mb-2">30 dias</p>
                <p className="text-gray-500 text-sm">Para testar tudo</p>
             </div>
             <div>
