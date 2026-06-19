@@ -29,6 +29,12 @@ export default function Landing() {
     senha: '',
     telefone: '',
     cpf_cnpj: '',
+    cep: '',
+    cidade: '',
+    endereco: '',
+    numero: '',
+    bairro: '',
+    complemento: '',
     plano: 'gratis' as 'gratis' | 'mensal' | 'anual',
   });
   const [loading, setLoading] = useState(false);
@@ -56,6 +62,12 @@ export default function Landing() {
         plano: formData.plano,
         telefone: formData.telefone || undefined,
         cpf_cnpj: formData.cpf_cnpj || undefined,
+        cep: formData.cep || undefined,
+        cidade: formData.cidade || undefined,
+        endereco: formData.endereco || undefined,
+        numero: formData.numero || undefined,
+        bairro: formData.bairro || undefined,
+        complemento: formData.complemento || undefined,
       };
       const response = await register(data);
       const { checkout, checkoutUrl, license, token, user } = response.data;
@@ -239,7 +251,60 @@ export default function Landing() {
                               : 'bg-emerald-100 text-emerald-700'
                           }`}>{badge}</span>
                         )}
-                      </div>
+            </div>
+
+            <div className="grid grid-cols-3 gap-4">
+              <input
+                name="cep"
+                placeholder="CEP"
+                value={formData.cep}
+                onChange={(e) => {
+                  let val = e.target.value.replace(/\D/g, '');
+                  if (val.length > 5) val = val.slice(0, 5) + '-' + val.slice(5, 8);
+                  setFormData({ ...formData, cep: val });
+                }}
+                className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3.5 text-gray-900 placeholder-gray-400 focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition"
+              />
+              <input
+                name="cidade"
+                placeholder="Cidade"
+                value={formData.cidade}
+                onChange={handleInputChange}
+                className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3.5 text-gray-900 placeholder-gray-400 focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition"
+              />
+              <input
+                name="numero"
+                placeholder="Número"
+                value={formData.numero}
+                onChange={handleInputChange}
+                className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3.5 text-gray-900 placeholder-gray-400 focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition"
+              />
+            </div>
+            <div>
+              <input
+                name="endereco"
+                placeholder="Endereço"
+                value={formData.endereco}
+                onChange={handleInputChange}
+                className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3.5 text-gray-900 placeholder-gray-400 focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition"
+              />
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <input
+                name="bairro"
+                placeholder="Bairro"
+                value={formData.bairro}
+                onChange={handleInputChange}
+                className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3.5 text-gray-900 placeholder-gray-400 focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition"
+              />
+              <input
+                name="complemento"
+                placeholder="Complemento"
+                value={formData.complemento}
+                onChange={handleInputChange}
+                className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3.5 text-gray-900 placeholder-gray-400 focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition"
+              />
+            </div>
                       <p className="text-sm text-gray-500 mt-1">{desc}</p>
                     </div>
                     <span className="font-bold text-gray-900">{preco}</span>

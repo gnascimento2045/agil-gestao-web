@@ -35,6 +35,12 @@ interface ClienteInfo {
   email: string;
   telefone?: string;
   cpf_cnpj?: string;
+  cep?: string;
+  cidade?: string;
+  endereco?: string;
+  numero?: string;
+  bairro?: string;
+  complemento?: string;
 }
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
