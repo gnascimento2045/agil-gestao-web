@@ -527,7 +527,7 @@ export default function Landing() {
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900">Teste tudo grátis</h2>
             <p className="text-gray-500 mt-4">Cancele quando quiser. Sem taxas escondidas.</p>
           </div>
-          <div className="max-w-sm mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="p-8 border border-gray-200 rounded-3xl bg-white">
               <div className="flex items-center gap-2 mb-4">
                 <Clock className="w-5 h-5 text-emerald-500" />
@@ -549,50 +549,53 @@ export default function Landing() {
                 Começar Grátis
               </button>
             </div>
-{/* COMENTADO: planos pagos desativados até API de pagamento ser arrumada */}
-            {false && (<div className="p-8 border-2 border-gray-200 rounded-3xl bg-white relative opacity-60">
-               <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-gray-500 text-white text-xs font-bold px-4 py-1 rounded-full">EM BREVE</div>
+
+            <div className="p-8 border-2 border-emerald-500 rounded-3xl bg-white relative">
+               <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-emerald-500 text-white text-xs font-bold px-4 py-1 rounded-full">RECOMENDADO</div>
                <div className="flex items-center gap-2 mb-4">
-                 <Crown className="w-5 h-5 text-gray-400" />
-                 <span className="text-gray-400 font-semibold">Pro Mensal</span>
+                 <Crown className="w-5 h-5 text-amber-500" />
+                 <span className="text-gray-900 font-semibold">Pro Mensal</span>
                </div>
                <div className="mb-6">
-                 <span className="text-4xl font-bold text-gray-400">R$ 29,90</span>
-                 <span className="text-gray-400">/mês</span>
+                 <span className="text-4xl font-bold text-gray-900">R$ 29,90</span>
+                 <span className="text-gray-500">/mês</span>
                </div>
                <ul className="space-y-3 mb-8">
                  {['Tudo do plano grátis', 'Produtos ilimitados', 'Relatórios avançados', 'Suporte prioritário', 'Painel de controle'].map(f => (
-                   <li key={f} className="flex items-center gap-2 text-sm text-gray-400">
-                     <Check className="w-4 h-4 text-gray-300" /> {f}
+                   <li key={f} className="flex items-center gap-2 text-sm text-gray-600">
+                     <Check className="w-4 h-4 text-emerald-500" /> {f}
                    </li>
                  ))}
                </ul>
-               <button disabled className="w-full py-3 bg-gray-300 text-white font-semibold rounded-xl cursor-not-allowed">
-                 EM BREVE
+               <button onClick={() => { setFormData({ ...formData, plano: 'mensal' }); setStep('form'); }}
+                 className="w-full py-3 bg-gray-900 hover:bg-black text-white font-semibold rounded-xl transition-all">
+                 Assinar Mensal
                </button>
-             </div>)}
-            {false && (<div className="p-8 border border-gray-200 rounded-3xl bg-white opacity-60">
+             </div>
+
+            <div className="p-8 border border-emerald-200 rounded-3xl bg-white">
                <div className="flex items-center gap-2 mb-4">
-                 <CalendarDays className="w-5 h-5 text-gray-400" />
-                 <span className="text-gray-400 font-semibold">Pro Anual</span>
-                 <span className="text-xs bg-gray-100 text-gray-500 px-2 py-0.5 rounded-full">EM BREVE</span>
+                 <CalendarDays className="w-5 h-5 text-emerald-500" />
+                 <span className="text-gray-900 font-semibold">Pro Anual</span>
+                 <span className="text-xs bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full">ECONOMIZE 47%</span>
                </div>
                <div className="mb-6">
-                 <span className="text-4xl font-bold text-gray-400">R$ 15,90</span>
-                 <span className="text-gray-400">/mês</span>
+                 <span className="text-4xl font-bold text-gray-900">R$ 15,90</span>
+                 <span className="text-gray-500">/mês</span>
                  <p className="text-sm text-gray-400 mt-1">Cobrado anualmente (R$ 190,80)</p>
                </div>
                <ul className="space-y-3 mb-8">
                  {['Tudo do plano mensal', 'Economia de R$ 168/ano', 'Suporte VIP', 'Atualizações prioritárias'].map(f => (
-                   <li key={f} className="flex items-center gap-2 text-sm text-gray-400">
-                     <Check className="w-4 h-4 text-gray-300" /> {f}
+                   <li key={f} className="flex items-center gap-2 text-sm text-gray-600">
+                     <Check className="w-4 h-4 text-emerald-500" /> {f}
                    </li>
                  ))}
                </ul>
-               <button disabled className="w-full py-3 border-2 border-gray-300 text-gray-400 font-semibold rounded-xl cursor-not-allowed">
-                 EM BREVE
+               <button onClick={() => { setFormData({ ...formData, plano: 'anual' }); setStep('form'); }}
+                 className="w-full py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-xl transition-all">
+                 Assinar Anual
                </button>
-             </div>)}
+             </div>
          </div>
            </div>
        </section>

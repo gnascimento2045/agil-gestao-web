@@ -320,7 +320,7 @@ export default function Painel() {
                   </div>
                   <div className="text-left">
                     <p className="font-medium text-gray-900">Renovar / Contratar Plano</p>
-                    <p className="text-xs text-gray-400">Planos pagos em breve</p>
+                    <p className="text-xs text-gray-400">Renove ou contrate um plano</p>
                   </div>
                 </div>
                 <ChevronRight className="w-4 h-4 text-gray-300 group-hover:text-emerald-500 transition-colors" />
@@ -494,9 +494,7 @@ export default function Painel() {
                 </p>
               </div>
 
-{/* COMENTADO: planos pagos desativados até API de pagamento ser arrumada */}
-            {false && (
-              <><div className="space-y-3">
+            <><div className="space-y-3">
                 {(Object.keys(PLANOS) as PlanoKey[]).map((key) => {
                   const p = PLANOS[key];
                   const Icon = p.icon;
@@ -575,7 +573,6 @@ export default function Painel() {
                   Pagamento seguro via <strong>Asaas</strong> · SSL criptografado
                 </p>
               </div></>
-            )}
             </div>
           )}
         </div>
