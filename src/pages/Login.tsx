@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 import { ChevronRight, Eye, EyeOff } from 'lucide-react';
 import { toast } from 'sonner';
 import { login } from '../services/api';
@@ -34,7 +35,13 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4 py-12">
+    <>
+      <Helmet>
+        <title>Login - Ágil Gestão</title>
+        <meta name="description" content="Faça login na Ágil Gestão para acessar seu painel de controle e gerenciar suas vendas." />
+        <meta name="robots" content="noindex" />
+      </Helmet>
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4 py-12">
       <div className="w-full max-w-md">
         <button
           onClick={() => navigate('/')}
@@ -106,5 +113,6 @@ export default function Login() {
         </p>
       </div>
     </div>
+    </>
   );
 }

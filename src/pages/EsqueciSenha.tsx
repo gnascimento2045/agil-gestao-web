@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 import { ChevronRight, Mail, CheckCircle } from 'lucide-react';
 import { toast } from 'sonner';
 import { esqueciSenha } from '../services/api';
@@ -26,27 +27,39 @@ export default function EsqueciSenha() {
 
   if (enviado) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4 py-12">
-        <div className="w-full max-w-md text-center">
-          <CheckCircle className="w-16 h-16 text-emerald-500 mx-auto mb-4" />
-          <h2 className="text-3xl font-bold text-gray-900 mb-2">Verifique seu email</h2>
-          <p className="text-gray-500 mb-8">
-            Enviamos um link de redefinição para <strong>{email}</strong>.
-            Ele expira em 1 hora.
-          </p>
-          <button
-            onClick={() => navigate('/login')}
-            className="inline-block bg-emerald-500 hover:bg-emerald-600 text-white font-semibold py-4 px-8 rounded-xl transition-all shadow-lg shadow-emerald-500/20"
-          >
-            Voltar para o login
-          </button>
+      <>
+        <Helmet>
+          <title>Email enviado - Ágil Gestão</title>
+          <meta name="robots" content="noindex" />
+        </Helmet>
+        <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4 py-12">
+          <div className="w-full max-w-md text-center">
+            <CheckCircle className="w-16 h-16 text-emerald-500 mx-auto mb-4" />
+            <h2 className="text-3xl font-bold text-gray-900 mb-2">Verifique seu email</h2>
+            <p className="text-gray-500 mb-8">
+              Enviamos um link de redefinição para <strong>{email}</strong>.
+              Ele expira em 1 hora.
+            </p>
+            <button
+              onClick={() => navigate('/login')}
+              className="inline-block bg-emerald-500 hover:bg-emerald-600 text-white font-semibold py-4 px-8 rounded-xl transition-all shadow-lg shadow-emerald-500/20"
+            >
+              Voltar para o login
+            </button>
+          </div>
         </div>
-      </div>
+      </>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4 py-12">
+    <>
+      <Helmet>
+        <title>Esqueci minha senha - Ágil Gestão</title>
+        <meta name="description" content="Redefina sua senha da Ágil Gestão. Informe seu email e enviaremos um link para criar uma nova senha." />
+        <meta name="robots" content="noindex" />
+      </Helmet>
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4 py-12">
       <div className="w-full max-w-md">
         <button
           onClick={() => navigate('/login')}
@@ -85,5 +98,6 @@ export default function EsqueciSenha() {
         </form>
       </div>
     </div>
+    </>
   );
 }

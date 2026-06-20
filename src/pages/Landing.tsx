@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 import {
   ArrowRight, Check, X, Download, MessageCircle,
   Clock, Shield, Zap, Sparkles, ChevronRight, Menu,
@@ -199,7 +200,13 @@ export default function Landing() {
   // ── SUCCESS ──────────────────────────────────────────────
   if (step === 'success' && licencaInfo) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4 py-12">
+      <>
+        <Helmet>
+          <title>Conta criada - Ágil Gestão</title>
+          <meta name="description" content="Sua conta Ágil Gestão foi criada com sucesso. Faça o download do sistema e comece a vender." />
+          <meta name="robots" content="noindex" />
+        </Helmet>
+        <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4 py-12">
         <div className="w-full max-w-md">
           <button
             onClick={() => setStep('form')}
@@ -260,13 +267,20 @@ export default function Landing() {
           </div>
         </div>
       </div>
+    </>
     );
   }
 
   // ── FORM ──────────────────────────────────────────────
   if (step === 'form') {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4 py-12">
+      <>
+        <Helmet>
+          <title>Cadastro - Ágil Gestão</title>
+          <meta name="description" content="Crie sua conta na Ágil Gestão e gerencie suas vendas com o melhor sistema PDV do mercado. Teste grátis!" />
+          <meta name="robots" content="noindex" />
+        </Helmet>
+        <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4 py-12">
         <div className="w-full max-w-lg">
           <button
             onClick={() => setStep('landing')}
@@ -494,12 +508,27 @@ export default function Landing() {
           </form>
         </div>
       </div>
+    </>
     );
   }
 
   // ── LANDING ──────────────────────────────────────────────
   return (
-    <div className="min-h-screen bg-white text-gray-900">
+    <>
+      <Helmet>
+        <title>Ágil Gestão - Sistema PDV para Gestão de Vendas</title>
+        <meta name="description" content="Sistema PDV completo para gerenciar suas vendas, controle de estoque e relatórios. Teste grátis por 30 dias! Experimente a Ágil Gestão." />
+        <meta property="og:title" content="Ágil Gestão - Sistema PDV para Gestão de Vendas" />
+        <meta property="og:description" content="Sistema PDV completo para gerenciar suas vendas. Teste grátis!" />
+        <meta property="og:image" content="https://agilgestao.com/images/logo.png" />
+        <meta property="og:type" content="website" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Ágil Gestão - Sistema PDV" />
+        <meta name="twitter:description" content="Sistema PDV completo para gerenciar suas vendas. Teste grátis!" />
+        <meta name="twitter:image" content="https://agilgestao.com/images/logo.png" />
+        <link rel="canonical" href="https://agilgestao.com/" />
+      </Helmet>
+      <div className="min-h-screen bg-white text-gray-900">
 
       {/* NAV */}
       <nav className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-xl border-b border-gray-100">
@@ -879,6 +908,7 @@ export default function Landing() {
         <MessageCircle className="w-6 h-6 text-white" />
       </a>
     </div>
+    </>
   );
 }
 

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 import { Eye, EyeOff, Lock, CheckCircle } from 'lucide-react';
 import { toast } from 'sonner';
 import { redefinirSenha } from '../services/api';
@@ -17,20 +18,26 @@ export default function RedefinirSenha() {
 
   if (!token) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4 py-12">
-        <div className="w-full max-w-md text-center">
-          <h2 className="text-3xl font-bold text-gray-900 mb-2">Link inválido</h2>
-          <p className="text-gray-500 mb-8">
-            O link de redefinição é inválido ou está faltando o token.
-          </p>
-          <button
-            onClick={() => navigate('/esqueci-senha')}
-            className="bg-emerald-500 hover:bg-emerald-600 text-white font-semibold py-4 px-8 rounded-xl transition-all shadow-lg shadow-emerald-500/20"
-          >
-            Solicitar novo link
-          </button>
+      <>
+        <Helmet>
+          <title>Link inválido - Ágil Gestão</title>
+          <meta name="robots" content="noindex" />
+        </Helmet>
+        <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4 py-12">
+          <div className="w-full max-w-md text-center">
+            <h2 className="text-3xl font-bold text-gray-900 mb-2">Link inválido</h2>
+            <p className="text-gray-500 mb-8">
+              O link de redefinição é inválido ou está faltando o token.
+            </p>
+            <button
+              onClick={() => navigate('/esqueci-senha')}
+              className="bg-emerald-500 hover:bg-emerald-600 text-white font-semibold py-4 px-8 rounded-xl transition-all shadow-lg shadow-emerald-500/20"
+            >
+              Solicitar novo link
+            </button>
+          </div>
         </div>
-      </div>
+      </>
     );
   }
 
@@ -61,26 +68,38 @@ export default function RedefinirSenha() {
 
   if (redefinido) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4 py-12">
-        <div className="w-full max-w-md text-center">
-          <CheckCircle className="w-16 h-16 text-emerald-500 mx-auto mb-4" />
-          <h2 className="text-3xl font-bold text-gray-900 mb-2">Senha redefinida!</h2>
-          <p className="text-gray-500 mb-8">
-            Sua senha foi alterada com sucesso. Agora você pode fazer login com sua nova senha.
-          </p>
-          <button
-            onClick={() => navigate('/login')}
-            className="bg-emerald-500 hover:bg-emerald-600 text-white font-semibold py-4 px-8 rounded-xl transition-all shadow-lg shadow-emerald-500/20"
-          >
-            Fazer login
-          </button>
+      <>
+        <Helmet>
+          <title>Senha redefinida - Ágil Gestão</title>
+          <meta name="robots" content="noindex" />
+        </Helmet>
+        <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4 py-12">
+          <div className="w-full max-w-md text-center">
+            <CheckCircle className="w-16 h-16 text-emerald-500 mx-auto mb-4" />
+            <h2 className="text-3xl font-bold text-gray-900 mb-2">Senha redefinida!</h2>
+            <p className="text-gray-500 mb-8">
+              Sua senha foi alterada com sucesso. Agora você pode fazer login com sua nova senha.
+            </p>
+            <button
+              onClick={() => navigate('/login')}
+              className="bg-emerald-500 hover:bg-emerald-600 text-white font-semibold py-4 px-8 rounded-xl transition-all shadow-lg shadow-emerald-500/20"
+            >
+              Fazer login
+            </button>
+          </div>
         </div>
-      </div>
+      </>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4 py-12">
+    <>
+      <Helmet>
+        <title>Redefinir senha - Ágil Gestão</title>
+        <meta name="description" content="Redefina sua senha da Ágil Gestão. Escolha uma nova senha para sua conta." />
+        <meta name="robots" content="noindex" />
+      </Helmet>
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4 py-12">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
           <Lock className="w-12 h-12 text-emerald-500 mx-auto mb-4" />
@@ -132,5 +151,6 @@ export default function RedefinirSenha() {
         </form>
       </div>
     </div>
+    </>
   );
 }
