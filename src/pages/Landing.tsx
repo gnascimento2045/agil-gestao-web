@@ -503,7 +503,8 @@ export default function Landing() {
             </button>
 
             <p className="text-center text-xs text-gray-400 mt-4">
-              Ao criar sua conta, você terá acesso ao painel para gerenciar sua assinatura.
+              Ao criar sua conta, você concorda com nossa{' '}
+              <Link to="/privacidade" className="text-emerald-600 hover:text-emerald-700 underline">Política de Privacidade</Link>.
             </p>
           </form>
         </div>
@@ -899,6 +900,9 @@ export default function Landing() {
             <span className="text-xl font-bold tracking-tight text-gray-900">Ágil <span className="bg-gradient-to-r from-emerald-500 to-emerald-600 bg-clip-text text-transparent">Gestão</span></span>
           </div>
           <p className="text-gray-400 text-sm text-center">© 2026 ÁGIL GESTAO. Todos os direitos reservados.<br />Desenvolvido por <a href="https://gssystem.vercel.app" target="_blank" rel="noreferrer" className="text-emerald-600 hover:text-emerald-700 font-medium">GS System</a></p>
+          <Link to="/privacidade" className="text-xs text-gray-400 hover:text-emerald-600 transition-colors">
+            Política de Privacidade
+          </Link>
         </div>
       </footer>
 
