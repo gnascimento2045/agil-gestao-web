@@ -63,15 +63,21 @@ export function validarFormulario(
 
   if (planosPagos) {
     if (!dados.cep?.trim()) erros.cep = "CEP é obrigatório";
+    else if (!/^\d{8}$/.test(dados.cep.replace(/\D/g, ""))) erros.cep = "CEP deve ter 8 dígitos";
     if (!dados.cidade?.trim()) erros.cidade = "Cidade é obrigatória";
     if (!dados.endereco?.trim()) erros.endereco = "Endereço é obrigatório";
     if (!dados.numero?.trim()) erros.numero = "Número é obrigatório";
     if (!dados.bairro?.trim()) erros.bairro = "Bairro é obrigatório";
-  }
-
-  if (dados.cpf_cnpj?.trim()) {
-    const erroCpf = validarCpfCnpj(dados.cpf_cnpj);
-    if (erroCpf) erros.cpf_cnpj = erroCpf;
+    if (!dados.cpf_cnpj?.trim()) erros.cpf_cnpj = "CPF/CNPJ é obrigatório para planos pagos";
+    else {
+      const erroCpf = validarCpfCnpj(dados.cpf_cnpj);
+      if (erroCpf) erros.cpf_cnpj = erroCpf;
+    }
+  } else {
+    if (dados.cpf_cnpj?.trim()) {
+      const erroCpf = validarCpfCnpj(dados.cpf_cnpj);
+      if (erroCpf) erros.cpf_cnpj = erroCpf;
+    }
   }
 
   return erros;

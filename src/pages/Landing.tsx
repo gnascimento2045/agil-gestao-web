@@ -84,10 +84,16 @@ export default function Landing() {
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     const planosPagos = formData.plano !== 'gratis';
-    const erros = validarFormulario(formData, planosPagos);
-    if (Object.keys(erros).length > 0) {
-      setErrors(erros as Record<string, string>);
-      const primeiro = Object.keys(erros)[0];
+
+    // Merge erros assíncronos (ex: CEP inválido do ViaCEP) com validação síncrona
+    const errosValidacao = validarFormulario(formData, planosPagos);
+    const todosErros = { ...errors, ...errosValidacao };
+    // Remove campos vazios do state errors que já foram corrigidos
+    Object.keys(todosErros).forEach(k => { if (!todosErros[k]) delete todosErros[k]; });
+
+    if (Object.keys(todosErros).length > 0) {
+      setErrors(todosErros);
+      const primeiro = Object.keys(todosErros)[0];
       document.querySelector(`[name="${primeiro}"]`)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
       return;
     }
@@ -131,17 +137,35 @@ export default function Landing() {
       toast.success('Conta criada! Sua licença está ativa.');
       setStep('success');
     } catch (error: any) {
-      const msg = error.response?.data?.erro || 'Erro no registro. Tente novamente.';
-      if (error.response?.data?.erros) {
+      const data = error.response?.data;
+      const msg = data?.erro || 'Erro no registro. Tente novamente.';
+
+      // Mapeia erros ASAAS para campos do formulário
+      const mapaAsaas: Record<string, string> = {
+        postalCode: 'cep',
+        cpfCnpj: 'cpf_cnpj',
+        address: 'endereco',
+        addressNumber: 'numero',
+        province: 'cidade',
+        phone: 'telefone',
+        name: 'nome',
+        email: 'email',
+      };
+
+      if (data?.erros) {
         const errosApi: Record<string, string> = {};
-        for (const e of error.response.data.erros) {
-          const campo = e.campo || e.code;
+        for (const e of data.erros) {
+          const campo = mapaAsaas[e.code] || e.campo || e.code;
           if (campo) errosApi[campo] = e.descricao || e.description;
         }
         if (Object.keys(errosApi).length > 0) {
           setErrors(errosApi);
+          const primeiro = Object.keys(errosApi)[0];
+          document.querySelector(`[name="${primeiro}"]`)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          return;
         }
       }
+
       toast.error(msg);
     } finally {
       setLoading(false);
