@@ -10,6 +10,7 @@ import { register } from '../services/api';
 
 import { maskTelefone, maskCpfCnpj } from '../utils/masks';
 import { buscarCep } from '../utils/viacep';
+import { validarFormulario, validarCpfCnpj } from '../utils/validators';
 
 const DOWNLOAD_URL = 'https://pub-269810c1c90047949ec25a9b7b9a5545.r2.dev/releases/agil-gestao-setup.exe';
 const WHATSAPP_URL = 'https://wa.me/5561992724480';
@@ -39,29 +40,41 @@ export default function Landing() {
     plano: 'gratis' as 'gratis' | 'mensal' | 'anual',
   });
   const [loading, setLoading] = useState(false);
+  const [errors, setErrors] = useState<Record<string, string>>({});
   const [licencaInfo, setLicencaInfo] = useState<LicencaInfo | null>(null);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     let value = e.target.value;
-    if (e.target.name === 'telefone') value = maskTelefone(value);
-    if (e.target.name === 'cpf_cnpj') value = maskCpfCnpj(value);
-    if (e.target.name === 'cep') {
+    const name = e.target.name;
+    setErrors(prev => ({ ...prev, [name]: '' }));
+    if (name === 'telefone') value = maskTelefone(value);
+    if (name === 'cpf_cnpj') value = maskCpfCnpj(value);
+    if (name === 'cep') {
       value = value.replace(/\D/g, '').slice(0, 8);
       if (value.length === 8) {
         buscarCep(value).then(d => {
-          if (d) {
-            setFormData(prev => ({
-              ...prev,
-              cep: value,
-              cidade: d.cidade || prev.cidade,
-              endereco: d.endereco || prev.endereco,
-              bairro: d.bairro || prev.bairro,
-            }));
+          setFormData(prev => ({
+            ...prev,
+            cep: value,
+            cidade: d.valido && d.cidade ? d.cidade : prev.cidade,
+            endereco: d.valido && d.endereco ? d.endereco : prev.endereco,
+            bairro: d.valido && d.bairro ? d.bairro : prev.bairro,
+          }));
+          if (!d.valido) {
+            setErrors(prev => ({ ...prev, cep: 'CEP não encontrado' }));
           }
         });
       }
     }
-    setFormData({ ...formData, [e.target.name]: value });
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+    const name = e.target.name;
+    if (name === 'cpf_cnpj' && e.target.value) {
+      const erro = validarCpfCnpj(e.target.value);
+      if (erro) setErrors(prev => ({ ...prev, cpf_cnpj: erro }));
+    }
   };
 
   const handlePlanoChange = (plano: 'gratis' | 'mensal' | 'anual') => {
@@ -70,6 +83,16 @@ export default function Landing() {
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
+    const planosPagos = formData.plano !== 'gratis';
+    const erros = validarFormulario(formData, planosPagos);
+    if (Object.keys(erros).length > 0) {
+      setErrors(erros as Record<string, string>);
+      const primeiro = Object.keys(erros)[0];
+      document.querySelector(`[name="${primeiro}"]`)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return;
+    }
+
+    setErrors({});
     setLoading(true);
     try {
       const data = {
@@ -89,20 +112,17 @@ export default function Landing() {
       const response = await register(data);
       const { checkout, checkoutUrl, license, token, user } = response.data;
 
-      // Salva token em qualquer caso
       if (token) {
         localStorage.setItem('token', token);
         localStorage.setItem('cliente', JSON.stringify(user));
       }
 
-      // Plano pago: redireciona para o checkout do Asaas
       if (checkout && checkoutUrl) {
         toast.success('Conta criada! Redirecionando para o pagamento...');
         window.location.href = checkoutUrl;
         return;
       }
 
-      // Plano grátis: vai para a tela de sucesso
       setLicencaInfo({
         chave: license.chave,
         dataExpiracao: license.dataExpiracao,
@@ -111,7 +131,18 @@ export default function Landing() {
       toast.success('Conta criada! Sua licença está ativa.');
       setStep('success');
     } catch (error: any) {
-      toast.error(error.response?.data?.erro || 'Erro no registro. Tente novamente.');
+      const msg = error.response?.data?.erro || 'Erro no registro. Tente novamente.';
+      if (error.response?.data?.erros) {
+        const errosApi: Record<string, string> = {};
+        for (const e of error.response.data.erros) {
+          const campo = e.campo || e.code;
+          if (campo) errosApi[campo] = e.descricao || e.description;
+        }
+        if (Object.keys(errosApi).length > 0) {
+          setErrors(errosApi);
+        }
+      }
+      toast.error(msg);
     } finally {
       setLoading(false);
     }
@@ -286,8 +317,11 @@ export default function Landing() {
                 value={formData.nome}
                 onChange={handleInputChange}
                 required
-                className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3.5 text-gray-900 placeholder-gray-400 focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition"
+                className={`w-full bg-white border rounded-xl px-4 py-3.5 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 transition ${
+                  errors.nome ? 'border-red-400 focus:border-red-500 focus:ring-red-500/20' : 'border-gray-200 focus:border-emerald-500 focus:ring-emerald-500/20'
+                }`}
               />
+              {errors.nome && <p className="text-red-500 text-xs mt-1">{errors.nome}</p>}
             </div>
             <div>
               <input
@@ -297,8 +331,11 @@ export default function Landing() {
                 value={formData.email}
                 onChange={handleInputChange}
                 required
-                className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3.5 text-gray-900 placeholder-gray-400 focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition"
+                className={`w-full bg-white border rounded-xl px-4 py-3.5 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 transition ${
+                  errors.email ? 'border-red-400 focus:border-red-500 focus:ring-red-500/20' : 'border-gray-200 focus:border-emerald-500 focus:ring-emerald-500/20'
+                }`}
               />
+              {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email}</p>}
             </div>
             <div>
               <input
@@ -308,24 +345,35 @@ export default function Landing() {
                 value={formData.senha}
                 onChange={handleInputChange}
                 required
-                className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3.5 text-gray-900 placeholder-gray-400 focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition"
+                className={`w-full bg-white border rounded-xl px-4 py-3.5 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 transition ${
+                  errors.senha ? 'border-red-400 focus:border-red-500 focus:ring-red-500/20' : 'border-gray-200 focus:border-emerald-500 focus:ring-emerald-500/20'
+                }`}
               />
+              {errors.senha && <p className="text-red-500 text-xs mt-1">{errors.senha}</p>}
             </div>
             <div className="grid grid-cols-2 gap-4">
-              <input
-                name="telefone"
-                placeholder="WhatsApp"
-                value={formData.telefone}
-                onChange={handleInputChange}
-                className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3.5 text-gray-900 placeholder-gray-400 focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition"
-              />
-              <input
-                name="cpf_cnpj"
-                placeholder="CPF ou CNPJ"
-                value={formData.cpf_cnpj}
-                onChange={handleInputChange}
-                className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3.5 text-gray-900 placeholder-gray-400 focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition"
-              />
+              <div>
+                <input
+                  name="telefone"
+                  placeholder="WhatsApp"
+                  value={formData.telefone}
+                  onChange={handleInputChange}
+                  className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3.5 text-gray-900 placeholder-gray-400 focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition"
+                />
+              </div>
+              <div>
+                <input
+                  name="cpf_cnpj"
+                  placeholder="CPF ou CNPJ"
+                  value={formData.cpf_cnpj}
+                  onChange={handleInputChange}
+                  onBlur={handleBlur}
+                  className={`w-full bg-white border rounded-xl px-4 py-3.5 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 transition ${
+                    errors.cpf_cnpj ? 'border-red-400 focus:border-red-500 focus:ring-red-500/20' : 'border-gray-200 focus:border-emerald-500 focus:ring-emerald-500/20'
+                  }`}
+                />
+                {errors.cpf_cnpj && <p className="text-red-500 text-xs mt-1">{errors.cpf_cnpj}</p>}
+              </div>
             </div>
 
             {/* Endereço (obrigatório para todos os planos) */}
@@ -336,8 +384,11 @@ export default function Landing() {
                 value={formData.cep}
                 onChange={handleInputChange}
                 required
-                className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3.5 text-gray-900 placeholder-gray-400 focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition"
+                className={`w-full bg-white border rounded-xl px-4 py-3.5 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 transition ${
+                  errors.cep ? 'border-red-400 focus:border-red-500 focus:ring-red-500/20' : 'border-gray-200 focus:border-emerald-500 focus:ring-emerald-500/20'
+                }`}
               />
+              {errors.cep && <p className="text-red-500 text-xs mt-1">{errors.cep}</p>}
             </div>
             <div>
               <input
@@ -346,34 +397,52 @@ export default function Landing() {
                 value={formData.endereco}
                 onChange={handleInputChange}
                 required
-                className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3.5 text-gray-900 placeholder-gray-400 focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition"
+                className={`w-full bg-white border rounded-xl px-4 py-3.5 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 transition ${
+                  errors.endereco ? 'border-red-400 focus:border-red-500 focus:ring-red-500/20' : 'border-gray-200 focus:border-emerald-500 focus:ring-emerald-500/20'
+                }`}
               />
+              {errors.endereco && <p className="text-red-500 text-xs mt-1">{errors.endereco}</p>}
             </div>
             <div className="grid grid-cols-3 gap-4">
-              <input
-                name="cidade"
-                placeholder="Cidade *"
-                value={formData.cidade}
-                onChange={handleInputChange}
-                required
-                className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3.5 text-gray-900 placeholder-gray-400 focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition"
-              />
-              <input
-                name="numero"
-                placeholder="Número *"
-                value={formData.numero}
-                onChange={handleInputChange}
-                required
-                className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3.5 text-gray-900 placeholder-gray-400 focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition"
-              />
-              <input
-                name="bairro"
-                placeholder="Bairro *"
-                value={formData.bairro}
-                onChange={handleInputChange}
-                required
-                className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3.5 text-gray-900 placeholder-gray-400 focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition"
-              />
+              <div>
+                <input
+                  name="cidade"
+                  placeholder="Cidade *"
+                  value={formData.cidade}
+                  onChange={handleInputChange}
+                  required
+                  className={`w-full bg-white border rounded-xl px-4 py-3.5 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 transition ${
+                    errors.cidade ? 'border-red-400 focus:border-red-500 focus:ring-red-500/20' : 'border-gray-200 focus:border-emerald-500 focus:ring-emerald-500/20'
+                  }`}
+                />
+                {errors.cidade && <p className="text-red-500 text-xs mt-1">{errors.cidade}</p>}
+              </div>
+              <div>
+                <input
+                  name="numero"
+                  placeholder="Número *"
+                  value={formData.numero}
+                  onChange={handleInputChange}
+                  required
+                  className={`w-full bg-white border rounded-xl px-4 py-3.5 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 transition ${
+                    errors.numero ? 'border-red-400 focus:border-red-500 focus:ring-red-500/20' : 'border-gray-200 focus:border-emerald-500 focus:ring-emerald-500/20'
+                  }`}
+                />
+                {errors.numero && <p className="text-red-500 text-xs mt-1">{errors.numero}</p>}
+              </div>
+              <div>
+                <input
+                  name="bairro"
+                  placeholder="Bairro *"
+                  value={formData.bairro}
+                  onChange={handleInputChange}
+                  required
+                  className={`w-full bg-white border rounded-xl px-4 py-3.5 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 transition ${
+                    errors.bairro ? 'border-red-400 focus:border-red-500 focus:ring-red-500/20' : 'border-gray-200 focus:border-emerald-500 focus:ring-emerald-500/20'
+                  }`}
+                />
+                {errors.bairro && <p className="text-red-500 text-xs mt-1">{errors.bairro}</p>}
+              </div>
             </div>
             <div>
               <input
