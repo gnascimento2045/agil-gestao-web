@@ -1,14 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://agilgestao.com/</loc>
-    <changefreq>monthly</changefreq>
+    <changefreq>weekly</changefreq>
     <priority>1.0</priority>
+    <image:image>
+      <image:loc>https://agilgestao.com/images/logo.png</image:loc>
+      <image:title>Ágil Gestão - Sistema PDV</image:title>
+      <image:caption>Sistema PDV completo para gestão de vendas</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://agilgestao.com/images/model/dashboard.jpg</image:loc>
+      <image:title>Dashboard Ágil Gestão</image:title>
+      <image:caption>Painel de controle com indicadores de vendas</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://agilgestao.com/images/model/pdv.jpg</image:loc>
+      <image:title>PDV - Ponto de Venda</image:title>
+      <image:caption>Sistema PDV para registro de vendas</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://agilgestao.com/images/model/listaprodutos.jpg</image:loc>
+      <image:title>Lista de Produtos</image:title>
+      <image:caption>Gerenciamento de produtos e estoque</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://agilgestao.com/images/model/relatoriovendas.jpg</image:loc>
+      <image:title>Relatório de Vendas</image:title>
+      <image:caption>Relatórios avançados de vendas</image:caption>
+    </image:image>
   </url>
   <url>
     <loc>https://agilgestao.com/login</loc>
     <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
+    <priority>0.6</priority>
   </url>
   <url>
     <loc>https://agilgestao.com/esqueci-senha</loc>
@@ -16,8 +43,18 @@
     <priority>0.3</priority>
   </url>
   <url>
+    <loc>https://agilgestao.com/redefinir-senha</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
     <loc>https://agilgestao.com/privacidade</loc>
     <changefreq>yearly</changefreq>
-    <priority>0.3</priority>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://agilgestao.com/painel</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.2</priority>
   </url>
 </urlset>

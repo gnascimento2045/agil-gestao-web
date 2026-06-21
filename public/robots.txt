@@ -1,3 +1,9 @@
 User-agent: *
 Allow: /
+Allow: /login
+Allow: /privacidade
+Allow: /esqueci-senha
+Allow: /redefinir-senha
+Disallow: /painel
+
 Sitemap: https://agilgestao.com/sitemap.xml

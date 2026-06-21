@@ -30,6 +30,7 @@ export default function EsqueciSenha() {
       <>
         <Helmet>
           <title>Email enviado - Ágil Gestão</title>
+          <meta name="description" content="Email de redefinição de senha enviado. Verifique sua caixa de entrada e siga as instruções para criar uma nova senha." />
           <meta name="robots" content="noindex" />
         </Helmet>
         <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4 py-12">

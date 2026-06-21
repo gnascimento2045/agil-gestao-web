@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useSearchParams, Link } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 import {
   LogOut, Key, RefreshCw, Lock, ChevronRight, Copy,
   CheckCircle, AlertCircle, Clock, Crown, CalendarDays,
@@ -240,6 +241,12 @@ export default function Painel() {
 
   // ─── Render principal ─────────────────────────────────────────────────────
   return (
+    <>
+      <Helmet>
+        <title>Painel de Controle - Ágil Gestão</title>
+        <meta name="description" content="Acesse seu painel de controle Ágil Gestão. Gerencie sua conta, licença, plano e endereço cadastrado." />
+        <meta name="robots" content="noindex" />
+      </Helmet>
     <div className="min-h-screen bg-gray-50">
 
       {/* NAV */}
@@ -721,5 +728,6 @@ export default function Painel() {
         </p>
       </div>
     </div>
+    </>
   );
 }

@@ -9,6 +9,7 @@ export default function Privacidade() {
         <title>Política de Privacidade - Ágil Gestão</title>
         <meta name="description" content="Política de privacidade da Ágil Gestão. Saiba como tratamos seus dados pessoais." />
         <meta name="robots" content="index" />
+        <link rel="canonical" href="https://agilgestao.com/privacidade" />
       </Helmet>
 
       <div className="min-h-screen bg-gray-50 px-4 py-12">

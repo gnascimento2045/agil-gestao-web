@@ -21,6 +21,7 @@ export default function RedefinirSenha() {
       <>
         <Helmet>
           <title>Link inválido - Ágil Gestão</title>
+          <meta name="description" content="O link de redefinição de senha é inválido ou expirou. Solicite um novo link para redefinir sua senha." />
           <meta name="robots" content="noindex" />
         </Helmet>
         <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4 py-12">
@@ -71,6 +72,7 @@ export default function RedefinirSenha() {
       <>
         <Helmet>
           <title>Senha redefinida - Ágil Gestão</title>
+          <meta name="description" content="Sua senha foi redefinida com sucesso! Faça login com sua nova senha e aproveite todos os recursos da Ágil Gestão." />
           <meta name="robots" content="noindex" />
         </Helmet>
         <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4 py-12">

@@ -26,15 +26,44 @@
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
-      "@type": "SoftwareApplication",
-      "name": "Ágil Gestão",
-      "description": "Sistema de PDV e gestão de vendas para pequenas e médias empresas.",
-      "applicationCategory": "BusinessApplication",
-      "operatingSystem": "Windows",
-      "offers": [
-        { "@type": "Offer", "name": "Teste Grátis", "price": "0", "priceCurrency": "BRL" },
-        { "@type": "Offer", "name": "Pro Mensal", "price": "29.90", "priceCurrency": "BRL" },
-        { "@type": "Offer", "name": "Pro Anual", "price": "190.80", "priceCurrency": "BRL" }
+      "@graph": [
+        {
+          "@type": "Organization",
+          "@id": "https://agilgestao.com/#organization",
+          "name": "Ágil Gestão",
+          "url": "https://agilgestao.com",
+          "logo": {
+            "@type": "ImageObject",
+            "url": "https://agilgestao.com/images/logo.png"
+          },
+          "contactPoint": {
+            "@type": "ContactPoint",
+            "telephone": "+55-61-99272-4480",
+            "contactType": "customer service",
+            "availableLanguage": "Portuguese"
+          }
+        },
+        {
+          "@type": "WebSite",
+          "@id": "https://agilgestao.com/#website",
+          "url": "https://agilgestao.com",
+          "name": "Ágil Gestão",
+          "description": "Sistema PDV completo para gerenciar vendas, estoque e relatórios.",
+          "inLanguage": "pt-BR",
+          "publisher": { "@id": "https://agilgestao.com/#organization" }
+        },
+        {
+          "@type": "SoftwareApplication",
+          "name": "Ágil Gestão",
+          "description": "Sistema de PDV e gestão de vendas para pequenas e médias empresas.",
+          "applicationCategory": "BusinessApplication",
+          "operatingSystem": "Windows",
+          "offers": [
+            { "@type": "Offer", "name": "Teste Grátis", "price": "0", "priceCurrency": "BRL" },
+            { "@type": "Offer", "name": "Pro Mensal", "price": "29.90", "priceCurrency": "BRL" },
+            { "@type": "Offer", "name": "Pro Anual", "price": "190.80", "priceCurrency": "BRL" }
+          ]
+        }
       ]
     }
     </script>
